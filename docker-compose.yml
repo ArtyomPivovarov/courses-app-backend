@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  nestapp:
+    container_name: courses-app-backend
+    image: artempivovarov/courses-app-backend:1.0.0
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      - DB_TYPE=postgres
+      - PG_USER=postgres
+      - PG_PASSWORD=postgres
+      - PG_DB=postgres
+      - PG_PORT=5432
+      - PG_HOST=db
+    depends_on:
+      - db
+  db:
+    container_name: courses-app-db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+volumes:
+  pgdata: {}
