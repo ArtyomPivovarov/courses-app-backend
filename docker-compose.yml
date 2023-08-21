@@ -7,7 +7,6 @@ services:
     ports:
       - '3000:3000'
     environment:
-      - DB_TYPE=postgres
       - PG_USER=postgres
       - PG_PASSWORD=postgres
       - PG_DB=postgres
