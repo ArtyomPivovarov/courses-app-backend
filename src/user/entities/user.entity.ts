@@ -3,8 +3,10 @@ import {
   PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn
+  UpdateDateColumn,
+  OneToMany
 } from 'typeorm'
+import { Transaction } from '@/transaction/entities/transaction.entity'
 
 @Entity()
 export class User {
@@ -20,9 +22,12 @@ export class User {
   @Column()
   password: string
 
-  @CreateDateColumn()
+  @OneToMany(() => Transaction, transaction => transaction.user)
+  transactions: Transaction[]
+
+  @CreateDateColumn({ name: 'created_at' })
   createdAt: Date
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date
 }
