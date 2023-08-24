@@ -19,8 +19,8 @@ export class User {
   @Column()
   email: string
 
-  @Column()
-  password: string
+  @Column({ name: 'password_hash' })
+  passwordHash: string
 
   @OneToMany(() => Transaction, transaction => transaction.user)
   transactions: Transaction[]
