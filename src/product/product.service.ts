@@ -16,21 +16,18 @@ export class ProductService {
     return this.productRepository.find()
   }
 
-  async findOne(id: number): Promise<Product> {
+  async findOne(id: number) {
     return this.productRepository.findOne({ where: { id } })
   }
 
-  async create(createProductDto: CreateProductDto): Promise<Product> {
-    const product = this.productRepository.create(createProductDto)
-    return this.productRepository.save(product)
+  async create(createProductDto: CreateProductDto) {
+    // const product = this.productRepository.create(createProductDto)
+    // return this.productRepository.save(product)
   }
 
-  async update(
-    id: number,
-    updateProductDto: UpdateProductDto
-  ): Promise<Product> {
-    await this.productRepository.update(id, updateProductDto)
-    return this.productRepository.findOne({ where: { id } })
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    // await this.productRepository.update(id, updateProductDto)
+    // return this.productRepository.findOne({ where: { id } })
   }
 
   async delete(id: number): Promise<void> {
