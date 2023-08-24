@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
 import { InjectRepository } from '@nestjs/typeorm'
@@ -36,16 +40,11 @@ export class UserService {
         await bcrypt.genSalt()
       )
     })
-    const userProfile = buildUserProfile(user)
 
     return {
-      user: userProfile,
-      accessToken: createAccessToken(userProfile, this.jwtService)
+      user: buildUserProfile(user),
+      accessToken: createAccessToken(user.id, user.email, this.jwtService)
     }
-  }
-
-  async findAll() {
-    return this.userRepository.find()
   }
 
   async findOne(email: string) {
@@ -53,11 +52,17 @@ export class UserService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
-    await this.userRepository.update(id, updateUserDto)
-    return this.userRepository.findOne({ where: { id } })
+    const user = await this.userRepository.findOne({ where: { id } })
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+
+    await this.userRepository.update(id, { name: updateUserDto.name })
   }
 
-  async delete(id: number): Promise<void> {
-    await this.userRepository.delete(id)
+  async getProfile(id: number) {
+    return buildUserProfile(
+      await this.userRepository.findOne({ where: { id } })
+    )
   }
 }

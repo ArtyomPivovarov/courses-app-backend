@@ -21,7 +21,6 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('register')
-  @UsePipes(new ValidationPipe())
   async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto)
   }
@@ -29,21 +28,12 @@ export class UserController {
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   getProfile(@Request() req) {
-    return req.user
+    return this.userService.getProfile(+req.user.id)
   }
 
-  @Get()
-  async findAll() {
-    return this.userService.findAll()
-  }
-
-  @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto)
-  }
-
-  @Delete(':id')
-  async delete(@Param('id') id: string) {
-    return this.userService.delete(+id)
+  @Patch()
+  @UseGuards(JwtAuthGuard)
+  async update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
+    return this.userService.update(+req.user.id, updateUserDto)
   }
 }

@@ -1,10 +1,10 @@
 import { JwtService } from '@nestjs/jwt'
-import { IUserProfile } from '@/types/user.types'
+import { User } from '@/user/entities/user.entity'
 
 export function createAccessToken(
-  userProfile: IUserProfile,
+  id: User['id'],
+  email: User['email'],
   jwtService: JwtService
 ) {
-  console.log('createAccessToken', userProfile)
-  return jwtService.sign(userProfile)
+  return jwtService.sign({ id, email })
 }

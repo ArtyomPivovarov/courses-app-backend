@@ -16,8 +16,12 @@ export class AuthService {
 
   async validateUser(email: string, password: string) {
     const user = await this.usersService.findOne(email)
+    if (!user) {
+      throw new UnauthorizedException('Invalid email or password')
+    }
+
     const passwordIsMatch = await bcrypt.compare(password, user.passwordHash)
-    if (!user || !passwordIsMatch) {
+    if (!passwordIsMatch) {
       throw new UnauthorizedException('Invalid email or password')
     }
 
@@ -27,10 +31,9 @@ export class AuthService {
   async login(
     user: User
   ): Promise<{ user: IUserProfile; accessToken: string }> {
-    const userProfile = buildUserProfile(user)
     return {
-      user: userProfile,
-      accessToken: createAccessToken(userProfile, this.jwtService)
+      user: buildUserProfile(user),
+      accessToken: createAccessToken(user.id, user.email, this.jwtService)
     }
   }
 }

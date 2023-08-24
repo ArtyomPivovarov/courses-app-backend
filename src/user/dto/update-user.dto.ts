@@ -1,4 +1,6 @@
-import { PickType } from '@nestjs/mapped-types'
-import { CreateUserDto } from './create-user.dto'
+import { MinLength } from 'class-validator'
 
-export class UpdateUserDto extends PickType(CreateUserDto, ['email', 'name']) {}
+export class UpdateUserDto {
+  @MinLength(3, { message: 'Name must be more than 3 symbols' })
+  name: string
+}
