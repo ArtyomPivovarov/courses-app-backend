@@ -13,6 +13,7 @@ import { JwtService } from '@nestjs/jwt'
 import { IUserProfile } from '@/types/user.types'
 import { createAccessToken } from '@/utils/auth.utils'
 import { buildUserProfile } from '@/utils/user.utils'
+import { validate } from 'class-validator'
 
 @Injectable()
 export class UserService {
@@ -57,7 +58,17 @@ export class UserService {
       throw new NotFoundException('User not found')
     }
 
-    await this.userRepository.update(id, { name: updateUserDto.name })
+    const errors = await validate(updateUserDto, {
+      whitelist: true,
+      forbidNonWhitelisted: true
+    })
+    if (errors.length) {
+      throw new BadRequestException(
+        errors.map(e => e.constraints.whitelistValidation)
+      )
+    }
+
+    await this.userRepository.update(id, updateUserDto)
   }
 
   async getProfile(id: number) {
