@@ -16,7 +16,7 @@ export class Product {
   @PrimaryGeneratedColumn({ name: 'product_id' })
   id: number
 
-  @Column() // TODO: add unique
+  @Column()
   slug: string
 
   @Column({ name: 'is_active' })

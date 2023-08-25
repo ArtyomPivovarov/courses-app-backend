@@ -4,10 +4,6 @@ import {
   Post,
   Body,
   Patch,
-  Param,
-  Delete,
-  ValidationPipe,
-  UsePipes,
   UseGuards,
   Request
 } from '@nestjs/common'
@@ -27,13 +23,13 @@ export class UserController {
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
-  getProfile(@Request() req) {
+  async getProfile(@Request() req) {
     return this.userService.getProfile(+req.user.id)
   }
 
   @Patch()
   @UseGuards(JwtAuthGuard)
   async update(@Request() req, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+req.user.id, updateUserDto)
+    await this.userService.update(+req.user.id, updateUserDto)
   }
 }

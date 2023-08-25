@@ -28,6 +28,12 @@ export class ProductCategory {
   @OneToMany(() => Product, product => product.category)
   products: Product[]
 
+  @Column({ nullable: true, name: 'description_en' })
+  descriptionEn: string
+
+  @Column({ nullable: true, name: 'description_ru' })
+  descriptionRu: string
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date
 

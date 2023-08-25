@@ -62,13 +62,14 @@ export class UserService {
       whitelist: true,
       forbidNonWhitelisted: true
     })
+    console.log(errors, updateUserDto)
     if (errors.length) {
       throw new BadRequestException(
         errors.map(e => e.constraints.whitelistValidation)
       )
     }
 
-    await this.userRepository.update(id, updateUserDto)
+    return await this.userRepository.update(id, updateUserDto)
   }
 
   async getProfile(id: number) {
