@@ -10,7 +10,7 @@ import { Repository } from 'typeorm'
 import { User } from './entities/user.entity'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import { IUserProfile } from '@/user/user.types'
+import { UserProfile } from '@/user/user.types'
 import { createAccessToken } from '@/auth/auth.utils'
 import { buildUserProfile } from '@/user/user.utils'
 
@@ -24,7 +24,7 @@ export class UserService {
 
   async create(
     createUserDto: CreateUserDto
-  ): Promise<{ user: IUserProfile; accessToken: string }> {
+  ): Promise<{ user: UserProfile; accessToken: string }> {
     const existUser = await this.userRepository.findOne({
       where: { email: createUserDto.email }
     })
@@ -48,7 +48,12 @@ export class UserService {
   }
 
   async findOne(email: string) {
-    return this.userRepository.findOne({ where: { email } })
+    return this.userRepository.findOne({
+      where: { email },
+      relations: {
+        transactions: true
+      }
+    })
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
@@ -62,7 +67,12 @@ export class UserService {
 
   async getProfile(id: number) {
     return buildUserProfile(
-      await this.userRepository.findOne({ where: { id } })
+      await this.userRepository.findOne({
+        where: { id },
+        relations: {
+          transactions: true
+        }
+      })
     )
   }
 }
