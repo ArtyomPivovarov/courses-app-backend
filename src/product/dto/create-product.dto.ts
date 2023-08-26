@@ -4,11 +4,17 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  Matches,
   MaxLength,
   MinLength
 } from 'class-validator'
+import { kebabCaseRegex } from '@/common/regex/cases.regex'
+
 export class CreateProductDto {
   @IsNotEmpty()
+  @Matches(kebabCaseRegex, {
+    message: 'Slug must be in kebab-case'
+  })
   slug: string
 
   @IsBoolean()
@@ -33,6 +39,10 @@ export class CreateProductDto {
 
   @IsNotEmpty()
   categoryId: ProductCategory['id']
+
+  @IsOptional()
+  @IsNumber()
+  rating?: number
 
   @IsOptional()
   descriptionEn?: string

@@ -17,12 +17,12 @@ export class ProductCategoryService {
   ) {}
 
   async create(createProductCategoryDto: CreateProductCategoryDto) {
-    const product = await this.productCategoryRepository.findOne({
+    const productCategory = await this.productCategoryRepository.findOne({
       where: {
         slug: createProductCategoryDto.slug
       }
     })
-    if (product) {
+    if (productCategory) {
       throw new BadRequestException(
         'Product category with this slug already exists'
       )

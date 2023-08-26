@@ -10,10 +10,9 @@ import { Repository } from 'typeorm'
 import { User } from './entities/user.entity'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import { IUserProfile } from '@/types/user.types'
-import { createAccessToken } from '@/utils/auth.utils'
-import { buildUserProfile } from '@/utils/user.utils'
-import { validate } from 'class-validator'
+import { IUserProfile } from '@/user/user.types'
+import { createAccessToken } from '@/auth/auth.utils'
+import { buildUserProfile } from '@/user/user.utils'
 
 @Injectable()
 export class UserService {

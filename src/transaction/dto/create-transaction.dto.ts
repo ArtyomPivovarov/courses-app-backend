@@ -1,4 +1,4 @@
-import { Currency } from '@/types/currency.types'
+import { Currency } from '@/common/types/currency.types'
 import { User } from '@/user/entities/user.entity'
 import { Product } from '@/product/entities/product.entity'
 

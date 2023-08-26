@@ -6,7 +6,7 @@ import {
   MaxLength,
   MinLength
 } from 'class-validator'
-import { kebabCaseRegex } from '@/regex/cases.regex'
+import { kebabCaseRegex } from '@/common/regex/cases.regex'
 
 export class CreateProductCategoryDto {
   @IsNotEmpty()

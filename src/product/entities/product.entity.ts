@@ -28,14 +28,17 @@ export class Product {
   @Column({ name: 'name_ru' })
   nameRu: string
 
-  @Column({ name: 'price_usd' })
+  @Column('decimal', { name: 'price_usd', precision: 10, scale: 2 })
   priceUsd: number
 
-  @Column({ name: 'price_rub' })
+  @Column('decimal', { name: 'price_rub', precision: 11, scale: 2 })
   priceRub: number
 
-  @Column({ name: 'price_btc' })
+  @Column('decimal', { name: 'price_btc', precision: 14, scale: 10 })
   priceBtc: number
+
+  @Column({ nullable: true })
+  rating: number
 
   @ManyToOne(() => ProductCategory, category => category.products)
   @JoinColumn({ name: 'product_category_id' })
