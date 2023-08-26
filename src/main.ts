@@ -10,7 +10,7 @@ import {
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter()
+    new FastifyAdapter({ ignoreTrailingSlash: true })
   )
 
   app.setGlobalPrefix('api')
