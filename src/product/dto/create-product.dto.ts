@@ -4,6 +4,7 @@ import {
   IsNotEmpty,
   IsNumber,
   IsOptional,
+  IsPositive,
   Matches,
   MaxLength,
   MinLength
@@ -29,12 +30,15 @@ export class CreateProductDto {
   nameRu: string
 
   @IsNumber()
+  @IsPositive({ message: 'Price usd must be a positive number' })
   priceUsd: number
 
   @IsNumber()
+  @IsPositive({ message: 'Price rub must be a positive number' })
   priceRub: number
 
   @IsNumber()
+  @IsPositive({ message: 'Price btc must be a positive number' })
   priceBtc: number
 
   @IsNotEmpty()

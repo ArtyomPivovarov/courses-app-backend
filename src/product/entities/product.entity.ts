@@ -1,4 +1,5 @@
 import {
+  Check,
   Column,
   CreateDateColumn,
   Entity,
@@ -12,6 +13,9 @@ import { Transaction } from '@/transaction/entities/transaction.entity'
 import { ProductCategory } from '@/product-category/entities/product-category.entity'
 
 @Entity()
+@Check(`"price_usd" > 0`)
+@Check(`"price_btc" > 0`)
+@Check(`"price_rub" > 0`)
 export class Product {
   @PrimaryGeneratedColumn({ name: 'product_id' })
   id: number
