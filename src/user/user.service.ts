@@ -62,7 +62,6 @@ export class UserService {
       whitelist: true,
       forbidNonWhitelisted: true
     })
-    console.log(errors, updateUserDto)
     if (errors.length) {
       throw new BadRequestException(
         errors.map(e => e.constraints.whitelistValidation)

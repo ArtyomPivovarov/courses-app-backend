@@ -1,7 +1,4 @@
-import { MaxLength, MinLength } from 'class-validator'
+import { PickType } from '@nestjs/mapped-types'
+import { CreateUserDto } from '@/user/dto/create-user.dto'
 
-export class UpdateUserDto {
-  @MinLength(3, { message: 'Minimum name length is 3 characters' })
-  @MaxLength(30, { message: 'Maximum password length is 30 characters' })
-  name: string
-}
+export class UpdateUserDto extends PickType(CreateUserDto, ['name']) {}

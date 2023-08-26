@@ -5,16 +5,13 @@ import {
   Body,
   Patch,
   Param,
-  UseGuards,
-  ValidationPipe,
-  UsePipes
+  UseGuards
 } from '@nestjs/common'
 import { ProductCategoryService } from './product-category.service'
 import { CreateProductCategoryDto } from './dto/create-product-category.dto'
 import { UpdateProductCategoryDto } from './dto/update-product-category.dto'
 import { ProductCategory } from '@/product-category/entities/product-category.entity'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
-import { PartialBody } from '@/decorators/partial-body.decorator'
 
 @Controller('product-categories')
 export class ProductCategoryController {
@@ -42,7 +39,7 @@ export class ProductCategoryController {
   @UseGuards(JwtAuthGuard)
   async update(
     @Param('id') id: number,
-    @PartialBody(CreateProductCategoryDto)
+    @Body()
     updateProductCategoryDto: UpdateProductCategoryDto
   ) {
     await this.productCategoryService.update(id, updateProductCategoryDto)
