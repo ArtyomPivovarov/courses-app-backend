@@ -58,16 +58,6 @@ export class UserService {
       throw new NotFoundException('User not found')
     }
 
-    const errors = await validate(updateUserDto, {
-      whitelist: true,
-      forbidNonWhitelisted: true
-    })
-    if (errors.length) {
-      throw new BadRequestException(
-        errors.map(e => e.constraints.whitelistValidation)
-      )
-    }
-
     return await this.userRepository.update(id, updateUserDto)
   }
 
