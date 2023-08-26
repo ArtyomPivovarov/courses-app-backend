@@ -1,4 +1,5 @@
 import {
+  Check,
   Column,
   CreateDateColumn,
   Entity,
@@ -11,11 +12,12 @@ import { User } from '@/user/entities/user.entity'
 import { Product } from '@/product/entities/product.entity'
 
 @Entity()
+@Check(`"amount" > 0`)
 export class Transaction {
   @PrimaryGeneratedColumn({ name: 'transaction_id' })
   id: number
 
-  @Column()
+  @Column('decimal', { precision: 19, scale: 10 })
   amount: number
 
   @Column()

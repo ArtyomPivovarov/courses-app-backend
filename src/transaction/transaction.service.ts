@@ -1,28 +1,46 @@
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
 import { Transaction } from './entities/transaction.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
+import { User } from '@/user/entities/user.entity'
+import { Product } from '@/product/entities/product.entity'
 
 @Injectable()
 export class TransactionService {
   constructor(
     @InjectRepository(Transaction)
-    private transactionRepository: Repository<Transaction>
+    private transactionRepository: Repository<Transaction>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    @InjectRepository(Product)
+    private productRepository: Repository<Product>
   ) {}
 
-  async findAll(): Promise<Transaction[]> {
-    return this.transactionRepository.find()
-  }
+  async create(createTransactionDto: CreateTransactionDto) {
+    const { productId, userId, ...rest } = createTransactionDto
+    const user = await this.userRepository.findOne({
+      where: {
+        id: userId
+      }
+    })
+    if (!user) {
+      throw new BadRequestException('User not found')
+    }
 
-  async findOne(id: number): Promise<Transaction> {
-    return this.transactionRepository.findOne({ where: { id } })
-  }
+    const product = await this.productRepository.findOne({
+      where: {
+        id: productId
+      }
+    })
+    if (!product) {
+      throw new BadRequestException('Product not found')
+    }
 
-  async create(
-    createTransactionDto: CreateTransactionDto
-  ): Promise<Transaction> {
-    const transaction = this.transactionRepository.create(createTransactionDto)
-    return this.transactionRepository.save(transaction)
+    return this.transactionRepository.save({
+      ...rest,
+      user: { id: userId },
+      product: { id: productId }
+    })
   }
 }
