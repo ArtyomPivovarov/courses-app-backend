@@ -8,6 +8,7 @@ import { TransactionModule } from './transaction/transaction.module'
 import { ProductModule } from './product/product.module';
 import { ProductCategoryModule } from './product-category/product-category.module';
 import { AuthModule } from './auth/auth.module';
+import { PurchaseModule } from './purchase/purchase.module';
 
 @Module({
   imports: [
@@ -30,7 +31,8 @@ import { AuthModule } from './auth/auth.module';
     TransactionModule,
     ProductModule,
     ProductCategoryModule,
-    AuthModule
+    AuthModule,
+    PurchaseModule
   ],
   controllers: [AppController],
   providers: [AppService]

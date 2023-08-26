@@ -11,6 +11,7 @@ import {
 } from 'typeorm'
 import { Transaction } from '@/transaction/entities/transaction.entity'
 import { ProductCategory } from '@/product-category/entities/product-category.entity'
+import { Purchase } from '@/purchase/entities/purchase.entity'
 
 @Entity()
 @Check(`"price_usd" > 0`)
@@ -47,6 +48,9 @@ export class Product {
   @ManyToOne(() => ProductCategory, category => category.products)
   @JoinColumn({ name: 'product_category_id' })
   category: ProductCategory
+
+  @OneToMany(() => Purchase, purchase => purchase.product)
+  purchases: Purchase[]
 
   @OneToMany(() => Transaction, transaction => transaction.product)
   transactions: Transaction[]

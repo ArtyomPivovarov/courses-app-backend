@@ -7,6 +7,7 @@ import {
   OneToMany
 } from 'typeorm'
 import { Transaction } from '@/transaction/entities/transaction.entity'
+import { Purchase } from '@/purchase/entities/purchase.entity'
 
 @Entity()
 export class User {
@@ -21,6 +22,9 @@ export class User {
 
   @Column({ name: 'password_hash' })
   passwordHash: string
+
+  @OneToMany(() => Purchase, purchase => purchase.user)
+  purchases: Purchase[]
 
   @OneToMany(() => Transaction, transaction => transaction.user)
   transactions: Transaction[]

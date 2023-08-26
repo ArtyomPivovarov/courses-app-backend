@@ -6,6 +6,7 @@ export function buildUserProfile(user: User): UserProfile {
     id: user.id,
     email: user.email,
     name: user.name,
-    transactions: user.transactions
+    transactions: user.transactions,
+    purchases: user.purchases
   }
 }

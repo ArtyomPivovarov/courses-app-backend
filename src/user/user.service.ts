@@ -51,7 +51,8 @@ export class UserService {
     return this.userRepository.findOne({
       where: { email },
       relations: {
-        transactions: true
+        transactions: true,
+        purchases: true
       }
     })
   }
@@ -68,9 +69,27 @@ export class UserService {
   async getProfile(id: number) {
     return buildUserProfile(
       await this.userRepository.findOne({
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          transactions: true,
+          purchases: {
+            id: true,
+            product: {
+              id: true,
+              slug: true,
+              nameEn: true,
+              nameRu: true
+            }
+          }
+        },
         where: { id },
         relations: {
-          transactions: true
+          transactions: true,
+          purchases: {
+            product: true
+          }
         }
       })
     )
