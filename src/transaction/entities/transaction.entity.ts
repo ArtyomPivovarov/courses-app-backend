@@ -20,7 +20,7 @@ export class Transaction {
   @Column('decimal', { precision: 19, scale: 10 })
   amount: number
 
-  @Column()
+  @Column({ type: 'enum', enum: Currency, default: Currency.USD })
   currency: Currency
 
   @ManyToOne(() => User, user => user.transactions)
