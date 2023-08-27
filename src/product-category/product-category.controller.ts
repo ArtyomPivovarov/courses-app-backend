@@ -30,6 +30,8 @@ export class ProductCategoryController {
   }
 
   @Get()
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async findAll() {
     return this.productCategoryService.findAll()
   }
