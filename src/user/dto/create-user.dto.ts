@@ -1,4 +1,5 @@
-import { IsEmail, MaxLength, MinLength } from 'class-validator'
+import { IsEmail, IsNotEmpty, MaxLength, MinLength } from 'class-validator'
+import { Role } from '@/role/role.enum'
 
 export class CreateUserDto {
   @IsEmail(undefined, { message: 'Email is not valid' })
@@ -12,4 +13,7 @@ export class CreateUserDto {
   @MinLength(3, { message: 'Minimum name length is 3 characters' })
   @MaxLength(30, { message: 'Maximum password length is 30 characters' })
   name: string
+
+  @IsNotEmpty()
+  role: Role
 }
