@@ -12,6 +12,9 @@ import { CreateProductCategoryDto } from './dto/create-product-category.dto'
 import { UpdateProductCategoryDto } from './dto/update-product-category.dto'
 import { ProductCategory } from '@/product-category/entities/product-category.entity'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
+import { Roles } from '@/role/roles.decorator'
+import { Role } from '@/role/role.enum'
+import { RolesGuard } from '@/role/roles.guard'
 
 @Controller('product-categories')
 export class ProductCategoryController {
@@ -20,7 +23,8 @@ export class ProductCategoryController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async create(@Body() createProductCategoryDto: CreateProductCategoryDto) {
     return this.productCategoryService.create(createProductCategoryDto)
   }
@@ -36,7 +40,8 @@ export class ProductCategoryController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async update(
     @Param('id') id: number,
     @Body()

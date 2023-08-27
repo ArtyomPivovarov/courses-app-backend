@@ -8,6 +8,7 @@ import {
 } from 'typeorm'
 import { Transaction } from '@/transaction/entities/transaction.entity'
 import { Purchase } from '@/purchase/entities/purchase.entity'
+import { Role } from '@/role/role.enum'
 
 @Entity()
 export class User {
@@ -22,6 +23,9 @@ export class User {
 
   @Column({ name: 'password_hash' })
   passwordHash: string
+
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
+  role: Role
 
   @OneToMany(() => Purchase, purchase => purchase.user)
   purchases: Purchase[]

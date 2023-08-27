@@ -5,10 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UserModule } from './user/user.module'
 import { TransactionModule } from './transaction/transaction.module'
-import { ProductModule } from './product/product.module';
-import { ProductCategoryModule } from './product-category/product-category.module';
-import { AuthModule } from './auth/auth.module';
-import { PurchaseModule } from './purchase/purchase.module';
+import { ProductModule } from './product/product.module'
+import { ProductCategoryModule } from './product-category/product-category.module'
+import { AuthModule } from './auth/auth.module'
+import { PurchaseModule } from './purchase/purchase.module'
 
 @Module({
   imports: [

@@ -13,13 +13,17 @@ import { CreateProductDto } from './dto/create-product.dto'
 import { UpdateProductDto } from './dto/update-product.dto'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
+import { Role } from '@/role/role.enum'
+import { Roles } from '@/role/roles.decorator'
+import { RolesGuard } from '@/role/roles.guard'
 
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto)
   }
@@ -35,7 +39,8 @@ export class ProductController {
   }
 
   @Patch(':id')
-  @UseGuards(JwtAuthGuard)
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async update(
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto

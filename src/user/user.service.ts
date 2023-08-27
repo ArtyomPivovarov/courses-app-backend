@@ -43,7 +43,14 @@ export class UserService {
 
     return {
       user: buildUserProfile(user),
-      accessToken: createAccessToken(user.id, user.email, this.jwtService)
+      accessToken: createAccessToken(
+        {
+          id: user.id,
+          email: user.email,
+          role: user.role
+        },
+        this.jwtService
+      )
     }
   }
 
