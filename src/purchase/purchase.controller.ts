@@ -43,6 +43,29 @@ export class PurchaseController {
     return this.purchaseService.findOne(+id)
   }
 
+  @Get('user/:userId')
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async findByUser(
+    @Param('userId') userId: number,
+    @Query() paginationQueryDto: PaginationQueryDto
+  ) {
+    return this.purchaseService.findUserPurchases(+userId, paginationQueryDto)
+  }
+
+  @Get('product/:productId')
+  @Roles(Role.ADMIN)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  async findByProduct(
+    @Param('productId') productId: number,
+    @Query() paginationQueryDto: PaginationQueryDto
+  ) {
+    return this.purchaseService.findProductPurchases(
+      +productId,
+      paginationQueryDto
+    )
+  }
+
   @Patch(':id')
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)

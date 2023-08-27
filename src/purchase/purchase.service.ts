@@ -121,6 +121,89 @@ export class PurchaseService {
     return purchase
   }
 
+  async findUserPurchases(
+    userId: User['id'],
+    paginationQueryDto: PaginationQueryDto
+  ): Promise<PaginatedResponse<Purchase>> {
+    const { page, limit } = paginationQueryDto
+    const [items, totalItems] = await this.purchaseRepository.findAndCount({
+      select: {
+        id: true,
+        createdAt: true,
+        product: {
+          id: true,
+          slug: true,
+          nameEn: true,
+          nameRu: true
+        }
+      },
+      where: {
+        user: {
+          id: userId
+        }
+      },
+      order: {
+        createdAt: 'DESC'
+      },
+      relations: {
+        product: true
+      },
+      take: limit,
+      skip: (page - 1) * limit
+    })
+
+    return {
+      items,
+      meta: {
+        page,
+        limit,
+        totalItems,
+        totalPages: Math.ceil(totalItems / limit)
+      }
+    }
+  }
+
+  async findProductPurchases(
+    productId: Product['id'],
+    paginationQueryDto: PaginationQueryDto
+  ): Promise<PaginatedResponse<Purchase>> {
+    const { page, limit } = paginationQueryDto
+    const [items, totalItems] = await this.purchaseRepository.findAndCount({
+      select: {
+        id: true,
+        createdAt: true,
+        user: {
+          id: true,
+          email: true,
+          name: true
+        }
+      },
+      where: {
+        product: {
+          id: productId
+        }
+      },
+      order: {
+        createdAt: 'DESC'
+      },
+      relations: {
+        user: true
+      },
+      take: limit,
+      skip: (page - 1) * limit
+    })
+
+    return {
+      items,
+      meta: {
+        page,
+        limit,
+        totalItems,
+        totalPages: Math.ceil(totalItems / limit)
+      }
+    }
+  }
+
   async update(id: Purchase['id'], updatePurchaseDto: UpdatePurchaseDto) {
     const { userId, productId } = updatePurchaseDto
     const isExist = await this.purchaseRepository.findOne({
