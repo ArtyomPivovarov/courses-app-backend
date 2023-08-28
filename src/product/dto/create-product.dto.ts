@@ -7,6 +7,7 @@ import {
   IsPositive,
   Matches,
   MaxLength,
+  Min,
   MinLength
 } from 'class-validator'
 import { kebabCaseRegex } from '@/common/regex/cases.regex'
@@ -31,15 +32,19 @@ export class CreateProductDto {
 
   @IsNumber()
   @IsPositive({ message: 'Price usd must be a positive number' })
-  priceUsd: number
+  priceUSD: number
 
   @IsNumber()
   @IsPositive({ message: 'Price rub must be a positive number' })
-  priceRub: number
+  priceRUB: number
 
   @IsNumber()
   @IsPositive({ message: 'Price btc must be a positive number' })
-  priceBtc: number
+  priceBTC: number
+
+  @IsNumber()
+  @Min(0, { message: 'Stock must be a positive number or zero' })
+  stock: number
 
   @IsNotEmpty()
   categoryId: ProductCategory['id']

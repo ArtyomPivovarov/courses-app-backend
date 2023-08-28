@@ -5,11 +5,12 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryGeneratedColumn
 } from 'typeorm'
 import { Currency } from '@/common/types/currency.types'
 import { User } from '@/user/entities/user.entity'
-import { Product } from '@/product/entities/product.entity'
+import { Purchase } from '@/purchase/entities/purchase.entity'
 
 @Entity()
 @Check(`"amount" > 0`)
@@ -27,9 +28,8 @@ export class Transaction {
   @JoinColumn({ name: 'user_id' })
   user: User
 
-  @ManyToOne(() => Product, product => product.transactions)
-  @JoinColumn({ name: 'product_id' })
-  product: Product
+  @OneToOne(() => Purchase, purchase => purchase.transaction)
+  purchase: Purchase
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date

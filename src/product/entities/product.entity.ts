@@ -9,7 +9,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn
 } from 'typeorm'
-import { Transaction } from '@/transaction/entities/transaction.entity'
 import { ProductCategory } from '@/product-category/entities/product-category.entity'
 import { Purchase } from '@/purchase/entities/purchase.entity'
 
@@ -17,6 +16,7 @@ import { Purchase } from '@/purchase/entities/purchase.entity'
 @Check(`"price_usd" > 0`)
 @Check(`"price_btc" > 0`)
 @Check(`"price_rub" > 0`)
+@Check(`"stock" >= 0`)
 export class Product {
   @PrimaryGeneratedColumn({ name: 'product_id' })
   id: number
@@ -34,16 +34,16 @@ export class Product {
   nameRu: string
 
   @Column('decimal', { name: 'price_usd', precision: 10, scale: 2 })
-  priceUsd: number
+  priceUSD: number
 
   @Column('decimal', { name: 'price_rub', precision: 11, scale: 2 })
-  priceRub: number
+  priceRUB: number
 
   @Column('decimal', { name: 'price_btc', precision: 14, scale: 10 })
-  priceBtc: number
+  priceBTC: number
 
-  @Column({ nullable: true })
-  rating: number
+  @Column()
+  stock: number
 
   @ManyToOne(() => ProductCategory, category => category.products)
   @JoinColumn({ name: 'product_category_id' })
@@ -52,8 +52,8 @@ export class Product {
   @OneToMany(() => Purchase, purchase => purchase.product)
   purchases: Purchase[]
 
-  @OneToMany(() => Transaction, transaction => transaction.product)
-  transactions: Transaction[]
+  @Column({ nullable: true })
+  rating: number
 
   @Column({ nullable: true, name: 'description_en' })
   descriptionEn: string

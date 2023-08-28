@@ -7,9 +7,9 @@ export type ProductListItem = Pick<
   | 'isActive'
   | 'nameEn'
   | 'nameRu'
-  | 'priceUsd'
-  | 'priceBtc'
-  | 'priceRub'
+  | 'priceUSD'
+  | 'priceBTC'
+  | 'priceRUB'
   | 'rating'
   | 'createdAt'
 > & {

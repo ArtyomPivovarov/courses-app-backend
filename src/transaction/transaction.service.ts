@@ -4,9 +4,9 @@ import { Transaction } from './entities/transaction.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from '@/user/entities/user.entity'
-import { Product } from '@/product/entities/product.entity'
 import { PaginatedResponse } from '@/common/types/pagination.types'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
+import { Purchase } from '@/purchase/entities/purchase.entity'
 import { UpdateTransactionDto } from '@/transaction/dto/update-transactions.dto'
 
 @Injectable()
@@ -16,12 +16,12 @@ export class TransactionService {
     private transactionRepository: Repository<Transaction>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    @InjectRepository(Product)
-    private productRepository: Repository<Product>
+    @InjectRepository(Purchase)
+    private purchaseRepository: Repository<Purchase>
   ) {}
 
   async create(createTransactionDto: CreateTransactionDto) {
-    const { productId, userId, ...rest } = createTransactionDto
+    const { purchaseId, userId, ...rest } = createTransactionDto
     const user = await this.userRepository.findOne({
       where: {
         id: userId
@@ -31,19 +31,19 @@ export class TransactionService {
       throw new BadRequestException('User not found')
     }
 
-    const product = await this.productRepository.findOne({
+    const purchase = await this.purchaseRepository.findOne({
       where: {
-        id: productId
+        id: purchaseId
       }
     })
-    if (!product) {
+    if (!purchase) {
       throw new BadRequestException('Product not found')
     }
 
     return this.transactionRepository.save({
       ...rest,
       user: { id: userId },
-      product: { id: productId }
+      product: { id: purchaseId }
     })
   }
 
@@ -60,19 +60,16 @@ export class TransactionService {
           email: true,
           name: true
         },
-        product: {
+        purchase: {
           id: true,
-          slug: true,
-          nameEn: true,
-          nameRu: true,
-          priceUsd: true,
-          priceRub: true,
-          priceBtc: true
+          createdAt: true,
+          quantity: true,
+          status: true
         }
       },
       relations: {
         user: true,
-        product: true
+        purchase: true
       },
       take: limit,
       skip: (page - 1) * limit
@@ -99,14 +96,17 @@ export class TransactionService {
           email: true,
           name: true
         },
-        product: {
+        purchase: {
           id: true,
-          slug: true,
-          nameEn: true,
-          nameRu: true,
-          priceUsd: true,
-          priceRub: true,
-          priceBtc: true
+          createdAt: true,
+          product: {
+            id: true,
+            slug: true,
+            nameEn: true,
+            nameRu: true
+          },
+          quantity: true,
+          status: true
         }
       },
       where: {
@@ -114,7 +114,9 @@ export class TransactionService {
       },
       relations: {
         user: true,
-        product: true
+        purchase: {
+          product: true
+        }
       }
     })
     if (!transaction) {
@@ -133,57 +135,26 @@ export class TransactionService {
       select: {
         id: true,
         createdAt: true,
-        product: {
+        purchase: {
           id: true,
-          slug: true,
-          nameEn: true,
-          nameRu: true,
-          priceUsd: true,
-          priceRub: true,
-          priceBtc: true
+          createdAt: true,
+          product: {
+            id: true,
+            slug: true,
+            nameEn: true,
+            nameRu: true
+          },
+          quantity: true,
+          status: true
         }
       },
       where: {
         user: { id: userId }
       },
       relations: {
-        product: true
-      },
-      take: limit,
-      skip: (page - 1) * limit
-    })
-
-    return {
-      items,
-      meta: {
-        page,
-        limit,
-        totalItems,
-        totalPages: Math.ceil(totalItems / limit)
-      }
-    }
-  }
-
-  async findProductTransactions(
-    productId: Product['id'],
-    paginationQueryDto: PaginationQueryDto
-  ): Promise<PaginatedResponse<Transaction>> {
-    const { page, limit } = paginationQueryDto
-    const [items, totalItems] = await this.transactionRepository.findAndCount({
-      select: {
-        id: true,
-        createdAt: true,
-        user: {
-          id: true,
-          email: true,
-          name: true
+        purchase: {
+          product: true
         }
-      },
-      where: {
-        product: { id: productId }
-      },
-      relations: {
-        user: true
       },
       take: limit,
       skip: (page - 1) * limit
@@ -213,20 +184,20 @@ export class TransactionService {
       throw new BadRequestException('Transaction not found')
     }
 
-    const { productId, userId, ...rest } = updateTransactionDto
+    const { purchaseId, userId, ...rest } = updateTransactionDto
     const transactionUpdatePayload = { ...rest }
 
-    if (productId) {
-      const product = await this.productRepository.findOne({
+    if (purchaseId) {
+      const product = await this.purchaseRepository.findOne({
         where: {
-          id: productId
+          id: purchaseId
         }
       })
       if (!product) {
         throw new BadRequestException('Product not found')
       }
 
-      transactionUpdatePayload['product'] = { id: productId }
+      transactionUpdatePayload['purchase'] = { id: purchaseId }
     }
 
     if (userId) {

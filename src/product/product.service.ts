@@ -60,9 +60,9 @@ export class ProductService {
         isActive: true,
         nameEn: true,
         nameRu: true,
-        priceUsd: true,
-        priceRub: true,
-        priceBtc: true,
+        priceUSD: true,
+        priceRUB: true,
+        priceBTC: true,
         rating: true,
         createdAt: true,
         category: {

@@ -1,7 +1,7 @@
 import { Currency } from '@/common/types/currency.types'
 import { User } from '@/user/entities/user.entity'
-import { Product } from '@/product/entities/product.entity'
 import { IsNotEmpty, IsNumber, IsPositive } from 'class-validator'
+import { Purchase } from '@/purchase/entities/purchase.entity'
 
 export class CreateTransactionDto {
   @IsNumber()
@@ -15,5 +15,5 @@ export class CreateTransactionDto {
   userId: User['id']
 
   @IsNumber()
-  productId: Product['id']
+  purchaseId: Purchase['id']
 }

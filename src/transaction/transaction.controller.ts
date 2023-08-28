@@ -5,9 +5,9 @@ import {
   UseGuards,
   Get,
   Param,
-  Delete,
   Query,
-  Patch
+  Patch,
+  Delete
 } from '@nestjs/common'
 import { TransactionService } from './transaction.service'
 import { CreateTransactionDto } from './dto/create-transaction.dto'
@@ -52,19 +52,6 @@ export class TransactionController {
   ) {
     return this.transactionService.findUserTransactions(
       +userId,
-      paginationQueryDto
-    )
-  }
-
-  @Get('product/:productId')
-  @Roles(Role.ADMIN)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  async findByProduct(
-    @Param('productId') productId: number,
-    @Query() paginationQueryDto: PaginationQueryDto
-  ) {
-    return this.transactionService.findProductTransactions(
-      +productId,
       paginationQueryDto
     )
   }

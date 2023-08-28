@@ -1,0 +1,8 @@
+export enum PurchaseStatus {
+  CREATED = 'CREATED',
+  PAID = 'PAID',
+  PENDING = 'PENDING',
+  DELIVERED = 'DELIVERED',
+  CANCELLED = 'CANCELLED',
+  PROBLEM = 'PROBLEM'
+}
