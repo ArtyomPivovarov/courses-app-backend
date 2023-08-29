@@ -9,38 +9,38 @@ import {
   Query,
   UseGuards
 } from '@nestjs/common'
-import { PurchaseService } from './purchase.service'
+import { OrderService } from './order.service'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
-import { CreatePurchaseDto } from '@/purchase/dto/create-purchase.dto'
+import { CreateOrderDto } from '@/order/dto/create-order.dto'
 import { Roles } from '@/role/roles.decorator'
 import { Role } from '@/role/role.enum'
 import { RolesGuard } from '@/role/roles.guard'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
-import { UpdatePurchaseDto } from '@/purchase/dto/update-purchase.dto'
+import { UpdateOrderDto } from '@/order/dto/update-order.dto'
 
-@Controller('purchases')
-export class PurchaseController {
-  constructor(private readonly purchaseService: PurchaseService) {}
+@Controller('orders')
+export class OrderController {
+  constructor(private readonly orderService: OrderService) {}
 
   @Post()
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  create(@Body() createPurchaseDto: CreatePurchaseDto) {
-    return this.purchaseService.create(createPurchaseDto)
+  create(@Body() createOrderDto: CreateOrderDto) {
+    return this.orderService.create(createOrderDto)
   }
 
   @Get()
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async findAll(@Query() paginationQueryDto: PaginationQueryDto) {
-    return this.purchaseService.findAll(paginationQueryDto)
+    return this.orderService.findAll(paginationQueryDto)
   }
 
   @Get(':id')
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   findOne(@Param('id') id: string) {
-    return this.purchaseService.findOne(+id)
+    return this.orderService.findOne(+id)
   }
 
   @Get('user/:userId')
@@ -50,7 +50,7 @@ export class PurchaseController {
     @Param('userId') userId: number,
     @Query() paginationQueryDto: PaginationQueryDto
   ) {
-    return this.purchaseService.findUserPurchases(+userId, paginationQueryDto)
+    return this.orderService.findUserOrders(+userId, paginationQueryDto)
   }
 
   @Get('product/:productId')
@@ -60,10 +60,7 @@ export class PurchaseController {
     @Param('productId') productId: number,
     @Query() paginationQueryDto: PaginationQueryDto
   ) {
-    return this.purchaseService.findProductPurchases(
-      +productId,
-      paginationQueryDto
-    )
+    return this.orderService.findProductOrders(+productId, paginationQueryDto)
   }
 
   @Patch(':id')
@@ -71,15 +68,15 @@ export class PurchaseController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async update(
     @Param('id') id: string,
-    @Body() updatePurchaseDto: UpdatePurchaseDto
+    @Body() updateOrderDto: UpdateOrderDto
   ) {
-    await this.purchaseService.update(+id, updatePurchaseDto)
+    await this.orderService.update(+id, updateOrderDto)
   }
 
   @Delete(':id')
   @Roles(Role.ADMIN)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async delete(@Param('id') id: string) {
-    await this.purchaseService.delete(+id)
+    await this.orderService.delete(+id)
   }
 }

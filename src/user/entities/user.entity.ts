@@ -7,7 +7,7 @@ import {
   OneToMany
 } from 'typeorm'
 import { Transaction } from '@/transaction/entities/transaction.entity'
-import { Purchase } from '@/purchase/entities/purchase.entity'
+import { Order } from '@/order/entities/order.entity'
 import { Role } from '@/role/role.enum'
 
 @Entity()
@@ -27,8 +27,8 @@ export class User {
   @Column({ type: 'enum', enum: Role, default: Role.USER })
   role: Role
 
-  @OneToMany(() => Purchase, purchase => purchase.user)
-  purchases: Purchase[]
+  @OneToMany(() => Order, order => order.user)
+  orders: Order[]
 
   @OneToMany(() => Transaction, transaction => transaction.user)
   transactions: Transaction[]

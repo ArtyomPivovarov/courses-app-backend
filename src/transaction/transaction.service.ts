@@ -6,7 +6,7 @@ import { Repository } from 'typeorm'
 import { User } from '@/user/entities/user.entity'
 import { PaginatedResponse } from '@/common/types/pagination.types'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
-import { Purchase } from '@/purchase/entities/purchase.entity'
+import { Order } from '@/order/entities/order.entity'
 import { UpdateTransactionDto } from '@/transaction/dto/update-transactions.dto'
 
 @Injectable()
@@ -16,12 +16,12 @@ export class TransactionService {
     private transactionRepository: Repository<Transaction>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    @InjectRepository(Purchase)
-    private purchaseRepository: Repository<Purchase>
+    @InjectRepository(Order)
+    private orderRepository: Repository<Order>
   ) {}
 
   async create(createTransactionDto: CreateTransactionDto) {
-    const { purchaseId, userId, ...rest } = createTransactionDto
+    const { orderId, userId, ...rest } = createTransactionDto
     const user = await this.userRepository.findOne({
       where: {
         id: userId
@@ -31,19 +31,19 @@ export class TransactionService {
       throw new BadRequestException('User not found')
     }
 
-    const purchase = await this.purchaseRepository.findOne({
+    const order = await this.orderRepository.findOne({
       where: {
-        id: purchaseId
+        id: orderId
       }
     })
-    if (!purchase) {
+    if (!order) {
       throw new BadRequestException('Product not found')
     }
 
     return this.transactionRepository.save({
       ...rest,
       user: { id: userId },
-      product: { id: purchaseId }
+      product: { id: orderId }
     })
   }
 
@@ -60,7 +60,7 @@ export class TransactionService {
           email: true,
           name: true
         },
-        purchase: {
+        order: {
           id: true,
           createdAt: true,
           quantity: true,
@@ -69,7 +69,7 @@ export class TransactionService {
       },
       relations: {
         user: true,
-        purchase: true
+        order: true
       },
       take: limit,
       skip: (page - 1) * limit
@@ -96,7 +96,7 @@ export class TransactionService {
           email: true,
           name: true
         },
-        purchase: {
+        order: {
           id: true,
           createdAt: true,
           product: {
@@ -114,7 +114,7 @@ export class TransactionService {
       },
       relations: {
         user: true,
-        purchase: {
+        order: {
           product: true
         }
       }
@@ -135,7 +135,7 @@ export class TransactionService {
       select: {
         id: true,
         createdAt: true,
-        purchase: {
+        order: {
           id: true,
           createdAt: true,
           product: {
@@ -152,7 +152,7 @@ export class TransactionService {
         user: { id: userId }
       },
       relations: {
-        purchase: {
+        order: {
           product: true
         }
       },
@@ -184,20 +184,20 @@ export class TransactionService {
       throw new BadRequestException('Transaction not found')
     }
 
-    const { purchaseId, userId, ...rest } = updateTransactionDto
+    const { orderId, userId, ...rest } = updateTransactionDto
     const transactionUpdatePayload = { ...rest }
 
-    if (purchaseId) {
-      const product = await this.purchaseRepository.findOne({
+    if (orderId) {
+      const product = await this.orderRepository.findOne({
         where: {
-          id: purchaseId
+          id: orderId
         }
       })
       if (!product) {
         throw new BadRequestException('Product not found')
       }
 
-      transactionUpdatePayload['purchase'] = { id: purchaseId }
+      transactionUpdatePayload['order'] = { id: orderId }
     }
 
     if (userId) {

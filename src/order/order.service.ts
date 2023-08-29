@@ -1,21 +1,21 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
-import { Purchase } from '@/purchase/entities/purchase.entity'
+import { Order } from '@/order/entities/order.entity'
 import { InjectRepository } from '@nestjs/typeorm'
-import { CreatePurchaseDto } from '@/purchase/dto/create-purchase.dto'
+import { CreateOrderDto } from '@/order/dto/create-order.dto'
 import { Repository } from 'typeorm'
 import { User } from '@/user/entities/user.entity'
 import { Product } from '@/product/entities/product.entity'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { PaginatedResponse } from '@/common/types/pagination.types'
-import { UpdatePurchaseDto } from '@/purchase/dto/update-purchase.dto'
+import { UpdateOrderDto } from '@/order/dto/update-order.dto'
 import { Transaction } from '@/transaction/entities/transaction.entity'
-import { TRANSACTION_NEED_PURCHASE_STATUSES } from '@/purchase/purchase.const'
+import { TRANSACTION_NEED_PURCHASE_STATUSES } from '@/order/order.const'
 
 @Injectable()
-export class PurchaseService {
+export class OrderService {
   constructor(
-    @InjectRepository(Purchase)
-    private purchaseRepository: Repository<Purchase>,
+    @InjectRepository(Order)
+    private orderRepository: Repository<Order>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
     @InjectRepository(Transaction)
@@ -24,8 +24,8 @@ export class PurchaseService {
     private productRepository: Repository<Product>
   ) {}
 
-  async create(createPurchaseDto: CreatePurchaseDto) {
-    const { userId, productId, transactionId, ...rest } = createPurchaseDto
+  async create(createOrderDto: CreateOrderDto) {
+    const { userId, productId, transactionId, ...rest } = createOrderDto
     const user = await this.userRepository.findOne({
       where: {
         id: userId
@@ -48,7 +48,7 @@ export class PurchaseService {
     }
 
     if (
-      TRANSACTION_NEED_PURCHASE_STATUSES.includes(createPurchaseDto.status) &&
+      TRANSACTION_NEED_PURCHASE_STATUSES.includes(createOrderDto.status) &&
       !transactionId
     ) {
       throw new BadRequestException('Transaction is required')
@@ -63,7 +63,7 @@ export class PurchaseService {
           user: {
             id: true
           },
-          purchase: {
+          order: {
             id: true
           }
         },
@@ -72,14 +72,14 @@ export class PurchaseService {
         },
         relations: {
           user: true,
-          purchase: true
+          order: true
         }
       })
       if (!transaction || transaction.user.id !== userId) {
         throw new BadRequestException('Transaction not found')
       }
 
-      if (transaction.purchase?.id) {
+      if (transaction.order?.id) {
         throw new BadRequestException('Transaction already used')
       }
 
@@ -91,7 +91,7 @@ export class PurchaseService {
       }
     }
 
-    return this.purchaseRepository.save({
+    return this.orderRepository.save({
       ...rest,
       user: { id: userId },
       product: { id: productId },
@@ -101,9 +101,9 @@ export class PurchaseService {
 
   async findAll(
     paginationQueryDto: PaginationQueryDto
-  ): Promise<PaginatedResponse<Purchase>> {
+  ): Promise<PaginatedResponse<Order>> {
     const { page, limit } = paginationQueryDto
-    const [items, totalItems] = await this.purchaseRepository.findAndCount({
+    const [items, totalItems] = await this.orderRepository.findAndCount({
       select: {
         id: true,
         createdAt: true,
@@ -141,8 +141,8 @@ export class PurchaseService {
     }
   }
 
-  async findOne(id: Purchase['id']) {
-    const purchase = await this.purchaseRepository.findOne({
+  async findOne(id: Order['id']) {
+    const order = await this.orderRepository.findOne({
       select: {
         id: true,
         createdAt: true,
@@ -175,19 +175,19 @@ export class PurchaseService {
         transaction: true
       }
     })
-    if (!purchase) {
-      throw new BadRequestException('Purchase not found')
+    if (!order) {
+      throw new BadRequestException('Order not found')
     }
 
-    return purchase
+    return order
   }
 
-  async findUserPurchases(
+  async findUserOrders(
     userId: User['id'],
     paginationQueryDto: PaginationQueryDto
-  ): Promise<PaginatedResponse<Purchase>> {
+  ): Promise<PaginatedResponse<Order>> {
     const { page, limit } = paginationQueryDto
-    const [items, totalItems] = await this.purchaseRepository.findAndCount({
+    const [items, totalItems] = await this.orderRepository.findAndCount({
       select: {
         id: true,
         createdAt: true,
@@ -231,12 +231,12 @@ export class PurchaseService {
     }
   }
 
-  async findProductPurchases(
+  async findProductOrders(
     productId: Product['id'],
     paginationQueryDto: PaginationQueryDto
-  ): Promise<PaginatedResponse<Purchase>> {
+  ): Promise<PaginatedResponse<Order>> {
     const { page, limit } = paginationQueryDto
-    const [items, totalItems] = await this.purchaseRepository.findAndCount({
+    const [items, totalItems] = await this.orderRepository.findAndCount({
       select: {
         id: true,
         createdAt: true,
@@ -279,9 +279,9 @@ export class PurchaseService {
     }
   }
 
-  async update(id: Purchase['id'], updatePurchaseDto: UpdatePurchaseDto) {
-    const { userId, productId, transactionId, ...rest } = updatePurchaseDto
-    const purchase = await this.purchaseRepository.findOne({
+  async update(id: Order['id'], updateOrderDto: UpdateOrderDto) {
+    const { userId, productId, transactionId, ...rest } = updateOrderDto
+    const order = await this.orderRepository.findOne({
       select: {
         id: true,
         user: {
@@ -299,11 +299,11 @@ export class PurchaseService {
         product: true
       }
     })
-    if (!purchase) {
-      throw new BadRequestException('Purchase not found')
+    if (!order) {
+      throw new BadRequestException('Order not found')
     }
 
-    const purchaseUpdatePayload = {}
+    const orderUpdatePayload = {}
 
     if (userId) {
       const user = await this.userRepository.findOne({
@@ -315,12 +315,12 @@ export class PurchaseService {
         throw new BadRequestException('User not found')
       }
 
-      purchaseUpdatePayload['user'] = { id: userId }
+      orderUpdatePayload['user'] = { id: userId }
     }
 
     const product = await this.productRepository.findOne({
       where: {
-        id: productId || purchase.product.id
+        id: productId || order.product.id
       }
     })
 
@@ -329,7 +329,7 @@ export class PurchaseService {
         throw new BadRequestException('Product not found')
       }
 
-      purchaseUpdatePayload['product'] = { id: productId }
+      orderUpdatePayload['product'] = { id: productId }
     }
 
     if (product.stock < rest.quantity) {
@@ -360,14 +360,11 @@ export class PurchaseService {
           user: true
         }
       })
-      if (
-        !transaction ||
-        transaction.user.id !== (userId ?? purchase.user.id)
-      ) {
+      if (!transaction || transaction.user.id !== (userId ?? order.user.id)) {
         throw new BadRequestException('Transaction not found')
       }
 
-      if (transaction.purchase?.id && transaction.purchase.id !== id) {
+      if (transaction.order?.id && transaction.order.id !== id) {
         throw new BadRequestException('Transaction already used')
       }
 
@@ -378,22 +375,22 @@ export class PurchaseService {
         throw new BadRequestException('Invalid transaction amount')
       }
 
-      purchaseUpdatePayload['transaction'] = { id: transactionId }
+      orderUpdatePayload['transaction'] = { id: transactionId }
     }
 
-    return await this.purchaseRepository.update(id, purchaseUpdatePayload)
+    return await this.orderRepository.update(id, orderUpdatePayload)
   }
 
-  async delete(id: Purchase['id']) {
-    const isExist = await this.purchaseRepository.findOne({
+  async delete(id: Order['id']) {
+    const isExist = await this.orderRepository.findOne({
       where: {
         id
       }
     })
     if (!isExist) {
-      throw new BadRequestException('Purchase not found')
+      throw new BadRequestException('Order not found')
     }
 
-    return await this.purchaseRepository.delete(id)
+    return await this.orderRepository.delete(id)
   }
 }

@@ -10,7 +10,7 @@ import {
   UpdateDateColumn
 } from 'typeorm'
 import { ProductCategory } from '@/product-category/entities/product-category.entity'
-import { Purchase } from '@/purchase/entities/purchase.entity'
+import { Order } from '@/order/entities/order.entity'
 
 @Entity()
 @Check(`"price_usd" > 0`)
@@ -49,8 +49,8 @@ export class Product {
   @JoinColumn({ name: 'product_category_id' })
   category: ProductCategory
 
-  @OneToMany(() => Purchase, purchase => purchase.product)
-  purchases: Purchase[]
+  @OneToMany(() => Order, order => order.product)
+  orders: Order[]
 
   @Column({ nullable: true })
   rating: number

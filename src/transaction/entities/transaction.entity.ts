@@ -10,7 +10,7 @@ import {
 } from 'typeorm'
 import { Currency } from '@/common/types/currency.types'
 import { User } from '@/user/entities/user.entity'
-import { Purchase } from '@/purchase/entities/purchase.entity'
+import { Order } from '@/order/entities/order.entity'
 
 @Entity()
 @Check(`"amount" > 0`)
@@ -28,8 +28,8 @@ export class Transaction {
   @JoinColumn({ name: 'user_id' })
   user: User
 
-  @OneToOne(() => Purchase, purchase => purchase.transaction)
-  purchase: Purchase
+  @OneToOne(() => Order, order => order.transaction)
+  order: Order
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date

@@ -1,8 +1,8 @@
 import { IsNotEmpty, IsNumber, IsPositive, ValidateIf } from 'class-validator'
-import { PurchaseStatus } from '@/purchase/purchase.types'
-import { TRANSACTION_NEED_PURCHASE_STATUSES } from '@/purchase/purchase.const'
+import { OrderStatus } from '@/order/order.types'
+import { TRANSACTION_NEED_PURCHASE_STATUSES } from '@/order/order.const'
 
-export class CreatePurchaseDto {
+export class CreateOrderDto {
   @IsNumber()
   userId: number
 
@@ -14,7 +14,7 @@ export class CreatePurchaseDto {
   transactionId?: number
 
   @IsNotEmpty()
-  status: PurchaseStatus
+  status: OrderStatus
 
   @IsNumber()
   @IsPositive({ message: 'Quantity must be greater than 0' })

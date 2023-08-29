@@ -1,4 +1,4 @@
-export enum PurchaseStatus {
+export enum OrderStatus {
   CREATED = 'CREATED',
   PAID = 'PAID',
   PENDING = 'PENDING',

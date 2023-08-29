@@ -11,8 +11,8 @@ import {
 import { User } from '@/user/entities/user.entity'
 import { Transaction } from '@/transaction/entities/transaction.entity'
 import { Product } from '@/product/entities/product.entity'
-import { PurchaseStatus } from '@/purchase/purchase.types'
-import { TRANSACTION_NEED_PURCHASE_STATUSES } from '@/purchase/purchase.const'
+import { OrderStatus } from '@/order/order.types'
+import { TRANSACTION_NEED_PURCHASE_STATUSES } from '@/order/order.const'
 
 @Entity()
 @Check(`"quantity" > 0`)
@@ -23,19 +23,19 @@ import { TRANSACTION_NEED_PURCHASE_STATUSES } from '@/purchase/purchase.const'
     status => `'${status}'`
   ).join(', ')}]::text[]) AND "transaction_id" IS NULL)`
 )
-export class Purchase {
-  @PrimaryGeneratedColumn({ name: 'purchase_id' })
+export class Order {
+  @PrimaryGeneratedColumn({ name: 'order_id' })
   id: number
 
-  @ManyToOne(() => User, user => user.purchases)
+  @ManyToOne(() => User, user => user.orders)
   @JoinColumn({ name: 'user_id' })
   user: User
 
-  @ManyToOne(() => Product, product => product.purchases)
+  @ManyToOne(() => Product, product => product.orders)
   @JoinColumn({ name: 'product_id' })
   product: Product
 
-  @OneToOne(() => Transaction, transaction => transaction.purchase, {
+  @OneToOne(() => Transaction, transaction => transaction.order, {
     nullable: true
   })
   @JoinColumn({ name: 'transaction_id' })
@@ -46,10 +46,10 @@ export class Purchase {
 
   @Column({
     type: 'enum',
-    enum: PurchaseStatus,
-    default: PurchaseStatus.CREATED
+    enum: OrderStatus,
+    default: OrderStatus.CREATED
   })
-  status: PurchaseStatus
+  status: OrderStatus
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date
