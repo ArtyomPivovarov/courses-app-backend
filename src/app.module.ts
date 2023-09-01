@@ -9,6 +9,8 @@ import { ProductModule } from './product/product.module'
 import { ProductCategoryModule } from './product-category/product-category.module'
 import { AuthModule } from './auth/auth.module'
 import { OrderModule } from './order/order.module'
+// import { CurrencyModule } from './currency/currency.module';
+import { LanguageModule } from './language/language.module'
 
 @Module({
   imports: [
@@ -32,7 +34,9 @@ import { OrderModule } from './order/order.module'
     ProductModule,
     ProductCategoryModule,
     AuthModule,
-    OrderModule
+    OrderModule,
+    // CurrencyModule,
+    LanguageModule
   ],
   controllers: [AppController],
   providers: [AppService]
