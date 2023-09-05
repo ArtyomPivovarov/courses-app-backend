@@ -1,5 +1,4 @@
-// language.service.ts
-import { Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { Language } from '@/language/entities/language.entity'
@@ -14,6 +13,13 @@ export class LanguageService {
   ) {}
 
   async create(createLanguageDto: CreateLanguageDto): Promise<Language> {
+    const language = await this.languageRepository.findOne({
+      where: { code: createLanguageDto.code }
+    })
+    if (language) {
+      throw new BadRequestException('Language already exists')
+    }
+
     return await this.languageRepository.save(createLanguageDto)
   }
 
@@ -22,18 +28,28 @@ export class LanguageService {
   }
 
   async findOne(code: string): Promise<Language> {
-    return await this.languageRepository.findOne({ where: { code } })
+    const language = await this.languageRepository.findOne({
+      where: { code }
+    })
+    if (!language) {
+      throw new BadRequestException('Language does not exist')
+    }
+
+    return language
   }
 
-  async update(
-    code: string,
-    updateLanguageDto: UpdateLanguageDto
-  ): Promise<Language> {
-    await this.languageRepository.update(code, updateLanguageDto)
-    return this.findOne(code)
+  async update(code: string, updateLanguageDto: UpdateLanguageDto) {
+    return await this.languageRepository.update(code, updateLanguageDto)
   }
 
   async delete(code: string): Promise<void> {
+    const language = await this.languageRepository.findOne({
+      where: { code }
+    })
+    if (!language) {
+      throw new BadRequestException('Language does not exist')
+    }
+
     await this.languageRepository.delete(code)
   }
 }

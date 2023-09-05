@@ -5,11 +5,16 @@ import {
   Post,
   Body,
   Param,
-  Put,
   Delete,
-  UseGuards
+  UseGuards,
+  Patch
 } from '@nestjs/common'
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger'
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth
+} from '@nestjs/swagger'
 import { LanguageService } from './language.service'
 import { CreateLanguageDto } from '@/language/dto/create-language.dto'
 import { Language } from './entities/language.entity'
@@ -29,9 +34,10 @@ export class LanguageController {
     status: 201,
     description: 'The language has been successfully created.'
   })
+  @ApiBearerAuth()
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   create(@Body() createLanguageDto: CreateLanguageDto): Promise<Language> {
     return this.languageService.create(createLanguageDto)
   }
@@ -60,18 +66,20 @@ export class LanguageController {
     description: 'The language has been successfully updated.',
     type: Language
   })
-  @Put(':code')
+  @ApiBearerAuth()
+  @Patch(':code')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
   update(
     @Param('code') code: string,
     @Body() updateLanguageDto: UpdateLanguageDto
-  ): Promise<Language> {
-    return this.languageService.update(code, updateLanguageDto)
+  ): Promise<void> {
+    await this.languageService.update(code, updateLanguageDto)
   }
 
   @ApiOperation({ summary: 'Delete language' })
   @ApiResponse({ status: 200, description: 'The language has been deleted.' })
+  @ApiBearerAuth()
   @Delete(':code')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.ADMIN)
