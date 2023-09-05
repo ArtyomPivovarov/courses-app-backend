@@ -53,39 +53,34 @@ export class ProductService {
     onlyActive: boolean = true
   ): Promise<PaginatedResponse<ProductListItem>> {
     const { page, limit } = paginationQueryDto
-    const [items, totalItems] = await this.productRepository.findAndCount({
-      select: {
-        id: true,
-        slug: true,
-        isActive: true,
-        nameEn: true,
-        nameRu: true,
-        priceUSD: true,
-        priceRUB: true,
-        priceBTC: true,
-        rating: true,
-        createdAt: true,
-        category: {
-          id: true,
-          slug: true,
-          nameEn: true,
-          nameRu: true
-        }
-      },
-      where: onlyActive ? { isActive: true } : {},
-      order: {
-        rating: {
-          direction: 'DESC',
-          nulls: 'LAST'
-        },
-        createdAt: 'DESC'
-      },
-      relations: {
-        category: true
-      },
-      take: limit,
-      skip: (page - 1) * limit
-    })
+
+    const queryBuilder = this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
+      .select([
+        'product.id',
+        'product.slug',
+        'product.isActive',
+        'product.name',
+        'product.priceUSD',
+        'product.priceRUB',
+        'product.priceBTC',
+        'product.rating',
+        'product.createdAt',
+        'product.translations',
+        'category.id',
+        'category.slug',
+        'category.nameEn'
+      ])
+      .where(onlyActive ? 'product.isActive = :isActive' : '1=1', {
+        isActive: onlyActive
+      })
+      .orderBy('product.rating', 'DESC', 'NULLS LAST')
+      .addOrderBy('product.createdAt', 'DESC')
+      .take(limit)
+      .skip((page - 1) * limit)
+
+    const [items, totalItems] = await queryBuilder.getManyAndCount()
 
     return {
       items,

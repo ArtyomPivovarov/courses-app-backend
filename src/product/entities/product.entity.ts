@@ -27,11 +27,8 @@ export class Product {
   @Column({ name: 'is_active' })
   isActive: boolean
 
-  @Column({ name: 'name_en' })
-  nameEn: string
-
-  @Column({ name: 'name_ru' })
-  nameRu: string
+  @Column()
+  name: string
 
   @Column('decimal', { name: 'price_usd', precision: 10, scale: 2 })
   priceUSD: number
@@ -55,11 +52,16 @@ export class Product {
   @Column({ nullable: true })
   rating: number
 
-  @Column({ nullable: true, name: 'description_en' })
-  descriptionEn: string
+  @Column({ nullable: true })
+  description: string
 
-  @Column({ nullable: true, name: 'description_ru' })
-  descriptionRu: string
+  @Column('jsonb', { nullable: true })
+  translations: {
+    [langCode: string]: {
+      name?: string
+      description?: string
+    }
+  }
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date

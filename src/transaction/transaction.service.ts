@@ -102,8 +102,7 @@ export class TransactionService {
           product: {
             id: true,
             slug: true,
-            nameEn: true,
-            nameRu: true
+            name: true
           },
           quantity: true,
           status: true
@@ -141,8 +140,7 @@ export class TransactionService {
           product: {
             id: true,
             slug: true,
-            nameEn: true,
-            nameRu: true
+            name: true
           },
           quantity: true,
           status: true

@@ -3,6 +3,7 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsPositive,
   Matches,
@@ -24,11 +25,7 @@ export class CreateProductDto {
 
   @MinLength(3, { message: 'Minimum name en length is 3 characters' })
   @MaxLength(30, { message: 'Maximum name en length is 30 characters' })
-  nameEn: string
-
-  @MinLength(3, { message: 'Minimum name ru length is 3 characters' })
-  @MaxLength(30, { message: 'Maximum name ru length is 30 characters' })
-  nameRu: string
+  name: string
 
   @IsNumber()
   @IsPositive({ message: 'Price usd must be a positive number' })
@@ -54,8 +51,14 @@ export class CreateProductDto {
   rating?: number
 
   @IsOptional()
-  descriptionEn?: string
+  description?: string
 
   @IsOptional()
-  descriptionRu?: string
+  @IsObject({ message: 'Translations must be an object', each: true })
+  translations?: {
+    [langCode: string]: {
+      name?: string
+      description?: string
+    }
+  }
 }

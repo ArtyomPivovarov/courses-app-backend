@@ -115,8 +115,7 @@ export class OrderService {
         product: {
           id: true,
           slug: true,
-          nameEn: true,
-          nameRu: true
+          name: true
         }
       },
       order: {
@@ -156,8 +155,7 @@ export class OrderService {
         product: {
           id: true,
           slug: true,
-          nameEn: true,
-          nameRu: true
+          name: true
         },
         transaction: {
           id: true,
@@ -194,8 +192,7 @@ export class OrderService {
         product: {
           id: true,
           slug: true,
-          nameEn: true,
-          nameRu: true
+          name: true
         },
         transaction: {
           id: true,
