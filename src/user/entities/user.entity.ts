@@ -24,7 +24,7 @@ export class User {
   @Column({ name: 'password_hash' })
   passwordHash: string
 
-  @Column({ type: 'enum', enum: Role, default: Role.USER })
+  @Column({ type: 'enum', enum: Role, default: Role.User })
   role: Role
 
   @OneToMany(() => Order, order => order.user)

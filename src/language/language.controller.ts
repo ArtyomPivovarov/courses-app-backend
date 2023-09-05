@@ -1,4 +1,3 @@
-// language.controller.ts
 import {
   Controller,
   Get,
@@ -69,8 +68,8 @@ export class LanguageController {
   @ApiBearerAuth()
   @Patch(':code')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
-  update(
+  @Roles(Role.Admin)
+  async update(
     @Param('code') code: string,
     @Body() updateLanguageDto: UpdateLanguageDto
   ): Promise<void> {
@@ -82,7 +81,7 @@ export class LanguageController {
   @ApiBearerAuth()
   @Delete(':code')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   delete(@Param('code') code: string): Promise<void> {
     return this.languageService.delete(code)
   }

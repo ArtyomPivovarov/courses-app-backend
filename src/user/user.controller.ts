@@ -25,7 +25,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto)
@@ -37,14 +37,14 @@ export class UserController {
   }
 
   @Get()
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async findAll(@Query() paginationQueryDto: PaginationQueryDto) {
     return this.userService.findAll(paginationQueryDto)
   }
 
   @Get(':id')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async findOne(@Param('id') id: number) {
     return this.userService.findOneById(+id)
@@ -57,7 +57,7 @@ export class UserController {
   }
 
   @Patch(':id')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     await this.userService.update(+id, updateUserDto)

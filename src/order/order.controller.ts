@@ -23,28 +23,28 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   create(@Body() createOrderDto: CreateOrderDto) {
     return this.orderService.create(createOrderDto)
   }
 
   @Get()
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async findAll(@Query() paginationQueryDto: PaginationQueryDto) {
     return this.orderService.findAll(paginationQueryDto)
   }
 
   @Get(':id')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   findOne(@Param('id') id: string) {
     return this.orderService.findOne(+id)
   }
 
   @Get('user/:userId')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async findByUser(
     @Param('userId') userId: number,
@@ -54,7 +54,7 @@ export class OrderController {
   }
 
   @Get('product/:productId')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async findByProduct(
     @Param('productId') productId: number,
@@ -64,7 +64,7 @@ export class OrderController {
   }
 
   @Patch(':id')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async update(
     @Param('id') id: string,
@@ -74,7 +74,7 @@ export class OrderController {
   }
 
   @Delete(':id')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async delete(@Param('id') id: string) {
     await this.orderService.delete(+id)

@@ -23,14 +23,14 @@ export class ProductCategoryController {
   ) {}
 
   @Post()
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async create(@Body() createProductCategoryDto: CreateProductCategoryDto) {
     return this.productCategoryService.create(createProductCategoryDto)
   }
 
   @Get()
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async findAll() {
     return this.productCategoryService.findAll()
@@ -42,7 +42,7 @@ export class ProductCategoryController {
   }
 
   @Patch(':id')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async update(
     @Param('id') id: number,

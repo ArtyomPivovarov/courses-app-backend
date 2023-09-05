@@ -9,7 +9,7 @@ import { Repository } from 'typeorm'
 import { User } from './entities/user.entity'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import { UserAdminProfile, UserProfile } from '@/user/user.types'
+import { UserAdminProfile } from '@/user/user.types'
 import { createAccessToken } from '@/auth/auth.utils'
 import { buildUserAdminProfile, buildUserProfile } from '@/user/user.utils'
 import { UpdateUserProfileDto } from '@/user/dto/update-user-profile.dto'
@@ -17,6 +17,7 @@ import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { PaginatedResponse } from '@/common/types/pagination.types'
 import { RegisterUserDto } from '@/user/dto/register-user.dto'
 import { CreateUserDto } from '@/user/dto/create-user.dto'
+import { SuccessAuthResponse } from '@/auth/auth.types'
 
 @Injectable()
 export class UserService {
@@ -49,7 +50,7 @@ export class UserService {
 
   async register(
     registerUserDto: RegisterUserDto
-  ): Promise<{ user: UserProfile; accessToken: string }> {
+  ): Promise<SuccessAuthResponse> {
     const existUser = await this.userRepository.findOne({
       where: { email: registerUserDto.email }
     })

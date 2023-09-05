@@ -26,6 +26,7 @@ async function bootstrap() {
   )
 
   const config = new DocumentBuilder()
+    .addBearerAuth()
     .setTitle('Courses app')
     .setVersion(version)
     .build()

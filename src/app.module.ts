@@ -9,7 +9,6 @@ import { ProductModule } from './product/product.module'
 import { ProductCategoryModule } from './product-category/product-category.module'
 import { AuthModule } from './auth/auth.module'
 import { OrderModule } from './order/order.module'
-// import { CurrencyModule } from './currency/currency.module';
 import { LanguageModule } from './language/language.module'
 
 @Module({
@@ -35,7 +34,6 @@ import { LanguageModule } from './language/language.module'
     ProductCategoryModule,
     AuthModule,
     OrderModule,
-    // CurrencyModule,
     LanguageModule
   ],
   controllers: [AppController],

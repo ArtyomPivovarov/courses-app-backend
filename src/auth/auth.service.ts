@@ -2,10 +2,10 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { UserService } from '@/user/user.service'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import { UserProfile } from '@/user/user.types'
 import { User } from '@/user/entities/user.entity'
 import { createAccessToken } from '@/auth/auth.utils'
 import { buildUserProfile } from '@/user/user.utils'
+import { SuccessAuthResponse } from '@/auth/auth.types'
 
 @Injectable()
 export class AuthService {
@@ -28,7 +28,7 @@ export class AuthService {
     return user
   }
 
-  async login(user: User): Promise<{ user: UserProfile; accessToken: string }> {
+  async login(user: User): Promise<SuccessAuthResponse> {
     return {
       user: buildUserProfile(user),
       accessToken: createAccessToken(

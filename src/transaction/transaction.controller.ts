@@ -23,28 +23,28 @@ export class TransactionController {
   constructor(private readonly transactionService: TransactionService) {}
 
   @Post()
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   create(@Body() createTransactionDto: CreateTransactionDto) {
     return this.transactionService.create(createTransactionDto)
   }
 
   @Get()
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async findAll(@Query() paginationQueryDto: PaginationQueryDto) {
     return this.transactionService.findAll(paginationQueryDto)
   }
 
   @Get(':id')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async findOne(@Param('id') id: number) {
     return this.transactionService.findOne(+id)
   }
 
   @Get('user/:userId')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async findByUser(
     @Param('userId') userId: number,
@@ -57,7 +57,7 @@ export class TransactionController {
   }
 
   @Patch(':id')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async update(
     @Param('id') id: number,
@@ -67,7 +67,7 @@ export class TransactionController {
   }
 
   @Delete(':id')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async delete(@Param('id') id: number) {
     await this.transactionService.delete(+id)

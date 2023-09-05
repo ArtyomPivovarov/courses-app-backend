@@ -22,7 +22,7 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto)
@@ -39,7 +39,7 @@ export class ProductController {
   }
 
   @Patch(':id')
-  @Roles(Role.ADMIN)
+  @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
   async update(
     @Param('id') id: string,
