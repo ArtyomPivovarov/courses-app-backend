@@ -59,7 +59,9 @@ export class OrderService {
         select: {
           id: true,
           amount: true,
-          currency: true,
+          currency: {
+            code: true
+          },
           user: {
             id: true
           },
@@ -160,7 +162,9 @@ export class OrderService {
         transaction: {
           id: true,
           amount: true,
-          currency: true,
+          currency: {
+            code: true
+          },
           createdAt: true
         }
       },
@@ -170,7 +174,9 @@ export class OrderService {
       relations: {
         user: true,
         product: true,
-        transaction: true
+        transaction: {
+          currency: true
+        }
       }
     })
     if (!order) {
@@ -197,7 +203,9 @@ export class OrderService {
         transaction: {
           id: true,
           amount: true,
-          currency: true,
+          currency: {
+            code: true
+          },
           createdAt: true
         }
       },
@@ -211,7 +219,9 @@ export class OrderService {
       },
       relations: {
         product: true,
-        transaction: true
+        transaction: {
+          currency: true
+        }
       },
       take: limit,
       skip: (page - 1) * limit
@@ -245,7 +255,9 @@ export class OrderService {
         transaction: {
           id: true,
           amount: true,
-          currency: true,
+          currency: {
+            code: true
+          },
           createdAt: true
         }
       },
@@ -259,7 +271,9 @@ export class OrderService {
       },
       relations: {
         user: true,
-        transaction: true
+        transaction: {
+          currency: true
+        }
       },
       take: limit,
       skip: (page - 1) * limit
@@ -345,7 +359,9 @@ export class OrderService {
         select: {
           id: true,
           amount: true,
-          currency: true,
+          currency: {
+            code: true
+          },
           user: {
             id: true
           }

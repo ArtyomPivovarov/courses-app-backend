@@ -28,18 +28,6 @@ export class CreateProductDto {
   name: string
 
   @IsNumber()
-  @IsPositive({ message: 'Price usd must be a positive number' })
-  priceUSD: number
-
-  @IsNumber()
-  @IsPositive({ message: 'Price rub must be a positive number' })
-  priceRUB: number
-
-  @IsNumber()
-  @IsPositive({ message: 'Price btc must be a positive number' })
-  priceBTC: number
-
-  @IsNumber()
   @Min(0, { message: 'Stock must be a positive number or zero' })
   stock: number
 

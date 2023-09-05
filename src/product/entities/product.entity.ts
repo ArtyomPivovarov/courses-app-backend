@@ -11,11 +11,9 @@ import {
 } from 'typeorm'
 import { ProductCategory } from '@/product-category/entities/product-category.entity'
 import { Order } from '@/order/entities/order.entity'
+import { ProductPrice } from '@/product-price/entities/product-price.entity'
 
 @Entity()
-@Check(`"price_usd" > 0`)
-@Check(`"price_btc" > 0`)
-@Check(`"price_rub" > 0`)
 @Check(`"stock" >= 0`)
 export class Product {
   @PrimaryGeneratedColumn({ name: 'product_id' })
@@ -30,14 +28,8 @@ export class Product {
   @Column()
   name: string
 
-  @Column('decimal', { name: 'price_usd', precision: 10, scale: 2 })
-  priceUSD: number
-
-  @Column('decimal', { name: 'price_rub', precision: 11, scale: 2 })
-  priceRUB: number
-
-  @Column('decimal', { name: 'price_btc', precision: 14, scale: 10 })
-  priceBTC: number
+  @OneToMany(() => ProductPrice, price => price.product)
+  prices: ProductPrice[]
 
   @Column()
   stock: number

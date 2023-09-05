@@ -8,9 +8,9 @@ import {
   OneToOne,
   PrimaryGeneratedColumn
 } from 'typeorm'
-import { Currency } from '@/common/types/currency.types'
 import { User } from '@/user/entities/user.entity'
 import { Order } from '@/order/entities/order.entity'
+import { Currency } from '@/currency/entities/currency.entity'
 
 @Entity()
 @Check(`"amount" > 0`)
@@ -21,7 +21,8 @@ export class Transaction {
   @Column('decimal', { precision: 19, scale: 10 })
   amount: number
 
-  @Column({ type: 'enum', enum: Currency, default: Currency.USD })
+  @ManyToOne(() => Currency, currency => currency.transactions)
+  @JoinColumn({ name: 'currency_code' })
   currency: Currency
 
   @ManyToOne(() => User, user => user.transactions)

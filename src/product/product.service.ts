@@ -57,14 +57,13 @@ export class ProductService {
     const queryBuilder = this.productRepository
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.prices', 'prices')
       .select([
         'product.id',
         'product.slug',
         'product.isActive',
         'product.name',
-        'product.priceUSD',
-        'product.priceRUB',
-        'product.priceBTC',
+        'product.prices',
         'product.rating',
         'product.createdAt',
         'product.translations',

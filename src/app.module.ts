@@ -10,6 +10,8 @@ import { ProductCategoryModule } from './product-category/product-category.modul
 import { AuthModule } from './auth/auth.module'
 import { OrderModule } from './order/order.module'
 import { LanguageModule } from './language/language.module'
+import { ProductPriceModule } from './product-price/product-price.module'
+import { CurrencyModule } from '@/currency/currency.module'
 
 @Module({
   imports: [
@@ -28,13 +30,15 @@ import { LanguageModule } from './language/language.module'
       }),
       inject: [ConfigService]
     }),
-    UserModule,
-    TransactionModule,
-    ProductModule,
-    ProductCategoryModule,
     AuthModule,
+    UserModule,
+    ProductCategoryModule,
+    ProductModule,
+    ProductPriceModule,
     OrderModule,
-    LanguageModule
+    LanguageModule,
+    TransactionModule,
+    CurrencyModule
   ],
   controllers: [AppController],
   providers: [AppService]
