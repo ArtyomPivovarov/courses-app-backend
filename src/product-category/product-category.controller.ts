@@ -10,18 +10,23 @@ import {
 import { ProductCategoryService } from './product-category.service'
 import { CreateProductCategoryDto } from './dto/create-product-category.dto'
 import { UpdateProductCategoryDto } from './dto/update-product-category.dto'
-import { ProductCategory } from '@/product-category/entities/product-category.entity'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { Roles } from '@/role/roles.decorator'
 import { Role } from '@/role/role.enum'
 import { RolesGuard } from '@/role/roles.guard'
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('product-categories')
 @Controller('product-categories')
 export class ProductCategoryController {
   constructor(
     private readonly productCategoryService: ProductCategoryService
   ) {}
 
+  @ApiOperation({
+    summary: 'Create product category'
+  })
+  @ApiBearerAuth()
   @Post()
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -29,6 +34,10 @@ export class ProductCategoryController {
     return this.productCategoryService.create(createProductCategoryDto)
   }
 
+  @ApiOperation({
+    summary: 'Retrieve all product categories'
+  })
+  @ApiBearerAuth()
   @Get()
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -36,11 +45,18 @@ export class ProductCategoryController {
     return this.productCategoryService.findAll()
   }
 
+  @ApiOperation({
+    summary: 'Retrieve a product category by slug'
+  })
   @Get(':slug')
-  async findOne(@Param('slug') slug: ProductCategory['slug']) {
+  async findOne(@Param('slug') slug: string) {
     return this.productCategoryService.findOne(slug)
   }
 
+  @ApiOperation({
+    summary: 'Update product category by ID'
+  })
+  @ApiBearerAuth()
   @Patch(':id')
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)

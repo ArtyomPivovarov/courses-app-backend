@@ -70,7 +70,8 @@ export class ProductService {
         'product.translations',
         'category.id',
         'category.slug',
-        'category.nameEn'
+        'category.name',
+        'category.translations'
       ])
       .where(onlyActive ? 'product.isActive = :isActive' : '1=1', {
         isActive: onlyActive

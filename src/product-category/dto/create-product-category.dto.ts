@@ -1,6 +1,7 @@
 import {
   IsBoolean,
   IsNotEmpty,
+  IsObject,
   IsOptional,
   Matches,
   MaxLength,
@@ -18,23 +19,22 @@ export class CreateProductCategoryDto {
   @IsBoolean()
   isActive: boolean
 
-  @MinLength(3, { message: 'Minimum name en length is 3 characters' })
-  @MaxLength(30, { message: 'Maximum name en length is 30 characters' })
-  nameEn: string
-
-  @MinLength(3, { message: 'Minimum name ru length is 3 characters' })
-  @MaxLength(30, { message: 'Maximum name ru length is 30 characters' })
-  nameRu: string
+  @MinLength(3, { message: 'Minimum name length is 3 characters' })
+  @MaxLength(30, { message: 'Maximum name length is 30 characters' })
+  name: string
 
   @IsOptional()
   @MaxLength(200, {
-    message: 'Maximum description en length is 200 characters'
+    message: 'Maximum description length is 200 characters'
   })
-  descriptionEn?: string
+  description?: string
 
   @IsOptional()
-  @MaxLength(200, {
-    message: 'Maximum description ru length is 200 characters'
-  })
-  descriptionRu?: string
+  @IsObject({ message: 'Translations must be an object', each: true })
+  translations?: {
+    [langCode: string]: {
+      name?: string
+      description?: string
+    }
+  }
 }

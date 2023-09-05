@@ -12,5 +12,5 @@ export type ProductListItem = Pick<
   | 'rating'
   | 'createdAt'
 > & {
-  category: Pick<Product['category'], 'id' | 'slug' | 'nameEn' | 'nameRu'>
+  category: Pick<Product['category'], 'id' | 'slug' | 'name' | 'translations'>
 }

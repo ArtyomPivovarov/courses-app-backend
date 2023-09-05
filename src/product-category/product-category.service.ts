@@ -54,16 +54,18 @@ export class ProductCategoryService {
       throw new NotFoundException('Product category not found')
     }
 
-    const productCategoryWithNewSlug =
-      await this.productCategoryRepository.findOne({
-        where: {
-          slug: updateProductCategoryDto.slug
-        }
-      })
-    if (productCategoryWithNewSlug) {
-      throw new BadRequestException(
-        'Product category with this slug already exists'
-      )
+    if (updateProductCategoryDto.slug) {
+      const productCategoryWithNewSlug =
+        await this.productCategoryRepository.findOne({
+          where: {
+            slug: updateProductCategoryDto.slug
+          }
+        })
+      if (productCategoryWithNewSlug) {
+        throw new BadRequestException(
+          'Product category with this slug already exists'
+        )
+      }
     }
 
     return await this.productCategoryRepository.update(
