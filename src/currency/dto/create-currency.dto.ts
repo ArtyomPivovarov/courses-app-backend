@@ -1,14 +1,21 @@
-import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator'
+import {
+  IsNotEmpty,
+  IsString,
+  IsUppercase,
+  Length,
+  MaxLength,
+  MinLength
+} from 'class-validator'
 
 export class CreateCurrencyDto {
   @IsString()
+  @IsUppercase()
   @MinLength(3)
-  @MaxLength(3)
+  @MaxLength(4)
   code: string
 
   @IsString()
-  @MinLength(1)
-  @MaxLength(1)
+  @Length(1, 1)
   symbol: string
 
   @IsString()

@@ -1,34 +1,61 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { CurrencyService } from './currency.service';
-import { CreateCurrencyDto } from './dto/create-currency.dto';
-import { UpdateCurrencyDto } from './dto/update-currency.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UseGuards
+} from '@nestjs/common'
+import { CurrencyService } from './currency.service'
+import { CreateCurrencyDto } from './dto/create-currency.dto'
+import { UpdateCurrencyDto } from './dto/update-currency.dto'
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { RolesGuard } from '@/role/roles.guard'
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
+import { Roles } from '@/role/roles.decorator'
+import { Role } from '@/role/role.enum'
+import { Currency } from '@/currency/entities/currency.entity'
 
-@Controller('currency')
+@ApiTags('currencies')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles(Role.Admin)
+@Controller('currencies')
 export class CurrencyController {
   constructor(private readonly currencyService: CurrencyService) {}
 
+  @ApiOperation({ summary: 'Create currency' })
   @Post()
-  create(@Body() createCurrencyDto: CreateCurrencyDto) {
-    return this.currencyService.create(createCurrencyDto);
+  create(@Body() createCurrencyDto: CreateCurrencyDto): Promise<Currency> {
+    return this.currencyService.create(createCurrencyDto)
   }
 
+  @ApiOperation({ summary: 'Retrieve all currencies' })
   @Get()
-  findAll() {
-    return this.currencyService.findAll();
+  findAll(): Promise<Currency[]> {
+    return this.currencyService.findAll()
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.currencyService.findOne(+id);
+  @ApiOperation({ summary: 'Retrieve a currency by code' })
+  @Get(':code')
+  findOne(@Param('code') code: string): Promise<Currency> {
+    return this.currencyService.findOne(code)
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCurrencyDto: UpdateCurrencyDto) {
-    return this.currencyService.update(+id, updateCurrencyDto);
+  @ApiOperation({ summary: 'Update currency by code' })
+  @Patch(':code')
+  async update(
+    @Param('code') code: string,
+    @Body() updateCurrencyDto: UpdateCurrencyDto
+  ): Promise<void> {
+    await this.currencyService.update(code, updateCurrencyDto)
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.currencyService.remove(+id);
+  @ApiOperation({ summary: 'Delete currency by code' })
+  @Delete(':code')
+  delete(@Param('code') code: string) {
+    return this.currencyService.delete(code)
   }
 }

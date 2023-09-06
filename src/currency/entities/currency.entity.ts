@@ -4,7 +4,7 @@ import { Transaction } from '@/transaction/entities/transaction.entity'
 
 @Entity()
 export class Currency {
-  @PrimaryColumn({ length: 3, name: 'currency_code' })
+  @PrimaryColumn({ length: 4, name: 'currency_code' })
   code: string
 
   @Column({ length: 1, name: 'currency_symbol' })

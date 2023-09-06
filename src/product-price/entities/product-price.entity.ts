@@ -17,7 +17,7 @@ export class ProductPrice {
   @ManyToOne(() => Product, product => product.prices)
   product: Product
 
-  @PrimaryColumn({ name: 'currency_code', type: 'char', length: 3 })
+  @PrimaryColumn({ name: 'currency_code', type: 'char', length: 4 })
   @ManyToOne(() => Currency, currency => currency.prices)
   currency: Currency
 
