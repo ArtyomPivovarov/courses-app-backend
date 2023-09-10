@@ -58,15 +58,18 @@ export class ProductService {
       .createQueryBuilder('product')
       .leftJoinAndSelect('product.category', 'category')
       .leftJoinAndSelect('product.prices', 'prices')
+      .leftJoinAndSelect('prices.currency', 'currency')
       .select([
         'product.id',
         'product.slug',
         'product.isActive',
         'product.name',
-        'product.prices',
         'product.rating',
         'product.createdAt',
         'product.translations',
+        'prices.price',
+        'currency.code',
+        'currency.symbol',
         'category.id',
         'category.slug',
         'category.name',
@@ -97,7 +100,8 @@ export class ProductService {
     const product = await this.productRepository.findOne({
       where: { slug },
       relations: {
-        category: true
+        category: true,
+        prices: true
       }
     })
     if (!product) {

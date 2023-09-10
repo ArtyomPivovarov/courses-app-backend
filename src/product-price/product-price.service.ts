@@ -4,7 +4,7 @@ import {
   NotFoundException
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository } from 'typeorm'
+import { DeepPartial, FindOptionsWhere, Repository } from 'typeorm'
 import { CreateProductPriceDto } from '@/product-price/dto/create-product-price.dto'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { PaginatedResponse } from '@/common/types/pagination.types'
@@ -18,12 +18,13 @@ export class ProductPriceService {
     private productPriceRepository: Repository<ProductPrice>
   ) {}
 
-  create(createProductPriceDto: CreateProductPriceDto): Promise<ProductPrice> {
-    const product = this.productPriceRepository.findOne({
+  async create(
+    createProductPriceDto: CreateProductPriceDto
+  ): Promise<ProductPrice> {
+    const product = await this.productPriceRepository.findOne({
       where: {
-        product: {
-          id: createProductPriceDto.productId
-        },
+        product:
+          createProductPriceDto.productId as FindOptionsWhere<ProductPrice>, // cause product id is primary key
         currency: {
           code: createProductPriceDto.currencyCode
         }
@@ -39,7 +40,7 @@ export class ProductPriceService {
 
     return this.productPriceRepository.save({
       ...rest,
-      product: { id: productId },
+      product: productId as DeepPartial<ProductPrice>, // cause product id is primary key
       currency: { code: currencyCode }
     })
   }
@@ -48,6 +49,7 @@ export class ProductPriceService {
     paginationQueryDto: PaginationQueryDto
   ): Promise<PaginatedResponse<ProductPrice>> {
     const { page, limit } = paginationQueryDto
+
     const [items, totalItems] = await this.productPriceRepository.findAndCount({
       select: {
         price: true,

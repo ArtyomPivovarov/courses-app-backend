@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryColumn,
   UpdateDateColumn
@@ -13,14 +14,15 @@ import { Currency } from '@/currency/entities/currency.entity'
 @Entity()
 @Check(`"price" > 0`)
 export class ProductPrice {
-  @PrimaryColumn({ name: 'product_id', type: 'integer' })
+  @PrimaryColumn('integer', { name: 'product_id' }) // Todo: remove type annotation
   @ManyToOne(() => Product, product => product.prices)
   product: Product
 
-  @PrimaryColumn({ name: 'currency_code', type: 'char', length: 4 })
   @ManyToOne(() => Currency, currency => currency.prices)
+  @JoinColumn({ name: 'currency_code' })
   currency: Currency
 
+  @JoinColumn({ name: 'currency_code' })
   @Column('decimal', { precision: 19, scale: 10 })
   price: number
 
