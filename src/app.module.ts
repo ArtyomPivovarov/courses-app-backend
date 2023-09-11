@@ -12,6 +12,7 @@ import { OrderModule } from './order/order.module'
 import { LanguageModule } from './language/language.module'
 import { ProductPriceModule } from './product-price/product-price.module'
 import { CurrencyModule } from '@/currency/currency.module'
+import { CartModule } from './cart/cart.module'
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { CurrencyModule } from '@/currency/currency.module'
     OrderModule,
     LanguageModule,
     TransactionModule,
-    CurrencyModule
+    CurrencyModule,
+    CartModule
   ],
   controllers: [AppController],
   providers: [AppService]

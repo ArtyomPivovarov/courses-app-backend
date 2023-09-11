@@ -9,6 +9,7 @@ import {
 import { Transaction } from '@/transaction/entities/transaction.entity'
 import { Order } from '@/order/entities/order.entity'
 import { Role } from '@/role/role.enum'
+import { Cart } from '@/cart/entities/cart.entity'
 
 @Entity()
 export class User {
@@ -26,6 +27,9 @@ export class User {
 
   @Column({ type: 'enum', enum: Role, default: Role.User })
   role: Role
+
+  @OneToMany(() => Cart, cart => cart.user, { nullable: true })
+  carts: Cart[]
 
   @OneToMany(() => Order, order => order.user)
   orders: Order[]
