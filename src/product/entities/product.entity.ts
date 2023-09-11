@@ -12,6 +12,7 @@ import {
 import { ProductCategory } from '@/product-category/entities/product-category.entity'
 import { Order } from '@/order/entities/order.entity'
 import { ProductPrice } from '@/product-price/entities/product-price.entity'
+import { CartItem } from '@/cart-item/entities/cart-item.entity'
 
 @Entity()
 @Check(`"stock" >= 0`)
@@ -37,6 +38,9 @@ export class Product {
   @ManyToOne(() => ProductCategory, category => category.products)
   @JoinColumn({ name: 'product_category_id' })
   category: ProductCategory
+
+  @OneToMany(() => CartItem, cartItem => cartItem.product)
+  cartItems: CartItem[]
 
   @OneToMany(() => Order, order => order.product)
   orders: Order[]

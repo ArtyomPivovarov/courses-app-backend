@@ -13,6 +13,7 @@ import { LanguageModule } from './language/language.module'
 import { ProductPriceModule } from './product-price/product-price.module'
 import { CurrencyModule } from '@/currency/currency.module'
 import { CartModule } from './cart/cart.module'
+import { CartItemModule } from './cart-item/cart-item.module';
 
 @Module({
   imports: [
@@ -40,7 +41,8 @@ import { CartModule } from './cart/cart.module'
     LanguageModule,
     TransactionModule,
     CurrencyModule,
-    CartModule
+    CartModule,
+    CartItemModule
   ],
   controllers: [AppController],
   providers: [AppService]

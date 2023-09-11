@@ -22,7 +22,6 @@ export class ProductPrice {
   @JoinColumn({ name: 'currency_code' })
   currency: Currency
 
-  @JoinColumn({ name: 'currency_code' })
   @Column('decimal', { precision: 19, scale: 10 })
   price: number
 
