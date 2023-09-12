@@ -15,6 +15,7 @@ import { CurrencyModule } from '@/currency/currency.module'
 import { CartModule } from './cart/cart.module'
 import { CartItemModule } from './cart-item/cart-item.module'
 import { OrderDetailModule } from './order-detail/order-detail.module'
+import { PaymentMethodModule } from './payment-method/payment-method.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { OrderDetailModule } from './order-detail/order-detail.module'
     OrderDetailModule,
     LanguageModule,
     PaymentModule,
-    CurrencyModule
+    CurrencyModule,
+    PaymentMethodModule
   ],
   controllers: [AppController],
   providers: [AppService]

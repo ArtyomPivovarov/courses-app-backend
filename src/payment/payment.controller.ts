@@ -5,9 +5,7 @@ import {
   UseGuards,
   Get,
   Param,
-  Query,
-  Patch,
-  Delete
+  Query
 } from '@nestjs/common'
 import { PaymentService } from './payment.service'
 import { CreatePaymentDto } from './dto/create-payment.dto'
@@ -16,7 +14,6 @@ import { Roles } from '@/role/roles.decorator'
 import { Role } from '@/role/role.enum'
 import { RolesGuard } from '@/role/roles.guard'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
-import { UpdatePaymentDto } from '@/payment/dto/update-payment.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('payments')
@@ -43,29 +40,5 @@ export class PaymentController {
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.paymentService.findOne(+id)
-  }
-
-  @ApiOperation({ summary: 'Get payments by user' })
-  @Get('user/:userId')
-  async findByUser(
-    @Param('userId') userId: number,
-    @Query() paginationQueryDto: PaginationQueryDto
-  ) {
-    return this.paymentService.findUserPayments(+userId, paginationQueryDto)
-  }
-
-  @ApiOperation({ summary: 'Get payments by order' })
-  @Patch(':id')
-  async update(
-    @Param('id') id: number,
-    @Body() updatePaymentDto: UpdatePaymentDto
-  ) {
-    await this.paymentService.update(+id, updatePaymentDto)
-  }
-
-  @ApiOperation({ summary: 'Delete payment by id' })
-  @Delete(':id')
-  async remove(@Param('id') id: number) {
-    await this.paymentService.remove(+id)
   }
 }

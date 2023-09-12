@@ -34,9 +34,6 @@ export class User {
   @OneToMany(() => Order, order => order.user)
   orders: Order[]
 
-  @OneToMany(() => Payment, payment => payment.user)
-  payments: Payment[]
-
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date
 
