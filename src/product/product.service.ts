@@ -64,6 +64,7 @@ export class ProductService {
         'product.slug',
         'product.isActive',
         'product.name',
+        'product.stock',
         'product.rating',
         'product.createdAt',
         'product.translations',

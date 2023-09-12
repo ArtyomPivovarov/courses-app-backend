@@ -12,6 +12,7 @@ import {
 import { ProductCategory } from '@/product-category/entities/product-category.entity'
 import { ProductPrice } from '@/product-price/entities/product-price.entity'
 import { CartItem } from '@/cart-item/entities/cart-item.entity'
+import { OrderDetail } from '@/order-detail/entities/order-detail.entity'
 
 @Entity()
 @Check(`"stock" >= 0`)
@@ -38,9 +39,6 @@ export class Product {
   @JoinColumn({ name: 'product_category_id' })
   category: ProductCategory
 
-  @OneToMany(() => CartItem, cartItem => cartItem.product)
-  cartItems: CartItem[]
-
   @Column({ nullable: true })
   rating: number
 
@@ -54,6 +52,12 @@ export class Product {
       description?: string
     }
   }
+
+  @OneToMany(() => CartItem, cartItem => cartItem.product)
+  cartItems: CartItem[]
+
+  @OneToMany(() => OrderDetail, orderDetail => orderDetail.product)
+  orderDetails: OrderDetail[]
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date

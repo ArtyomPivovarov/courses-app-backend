@@ -13,7 +13,8 @@ import { LanguageModule } from './language/language.module'
 import { ProductPriceModule } from './product-price/product-price.module'
 import { CurrencyModule } from '@/currency/currency.module'
 import { CartModule } from './cart/cart.module'
-import { CartItemModule } from './cart-item/cart-item.module';
+import { CartItemModule } from './cart-item/cart-item.module'
+import { OrderDetailModule } from './order-detail/order-detail.module'
 
 @Module({
   imports: [
@@ -37,12 +38,13 @@ import { CartItemModule } from './cart-item/cart-item.module';
     ProductCategoryModule,
     ProductModule,
     ProductPriceModule,
+    CartModule,
+    CartItemModule,
     OrderModule,
+    OrderDetailModule,
     LanguageModule,
     TransactionModule,
-    CurrencyModule,
-    CartModule,
-    CartItemModule
+    CurrencyModule
   ],
   controllers: [AppController],
   providers: [AppService]

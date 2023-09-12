@@ -5,6 +5,7 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn
@@ -12,6 +13,7 @@ import {
 import { User } from '@/user/entities/user.entity'
 import { OrderStatus } from '@/order/order.types'
 import { Transaction } from '@/transaction/entities/transaction.entity'
+import { OrderDetail } from '@/order-detail/entities/order-detail.entity'
 
 @Entity()
 @Check(`"total_price" > 0`)
@@ -32,6 +34,9 @@ export class Order {
     default: OrderStatus.CREATED
   })
   status: OrderStatus
+
+  @OneToMany(() => OrderDetail, orderDetail => orderDetail.order)
+  orderDetails: OrderDetail[]
 
   @OneToOne(() => Transaction, transaction => transaction.order)
   transaction: Transaction
