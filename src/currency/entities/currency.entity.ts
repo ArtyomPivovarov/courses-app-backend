@@ -1,6 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
 import { ProductPrice } from '@/product-price/entities/product-price.entity'
-import { Transaction } from '@/transaction/entities/transaction.entity'
+import { Payment } from '@/payment/entities/payment.entity'
 
 @Entity()
 export class Currency {
@@ -16,6 +16,6 @@ export class Currency {
   @OneToMany(() => ProductPrice, price => price.currency)
   prices: ProductPrice[]
 
-  @OneToMany(() => Transaction, transaction => transaction.currency)
-  transactions: Transaction[]
+  @OneToMany(() => Payment, payment => payment.currency)
+  payments: Payment[]
 }

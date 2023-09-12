@@ -12,7 +12,7 @@ import {
 } from 'typeorm'
 import { User } from '@/user/entities/user.entity'
 import { OrderStatus } from '@/order/order.types'
-import { Transaction } from '@/transaction/entities/transaction.entity'
+import { Payment } from '@/payment/entities/payment.entity'
 import { OrderDetail } from '@/order-detail/entities/order-detail.entity'
 
 @Entity()
@@ -38,8 +38,8 @@ export class Order {
   @OneToMany(() => OrderDetail, orderDetail => orderDetail.order)
   orderDetails: OrderDetail[]
 
-  @OneToOne(() => Transaction, transaction => transaction.order)
-  transaction: Transaction
+  @OneToOne(() => Payment, payment => payment.order)
+  payment: Payment
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date

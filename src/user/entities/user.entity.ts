@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
   OneToMany
 } from 'typeorm'
-import { Transaction } from '@/transaction/entities/transaction.entity'
+import { Payment } from '@/payment/entities/payment.entity'
 import { Order } from '@/order/entities/order.entity'
 import { Role } from '@/role/role.enum'
 import { Cart } from '@/cart/entities/cart.entity'
@@ -34,8 +34,8 @@ export class User {
   @OneToMany(() => Order, order => order.user)
   orders: Order[]
 
-  @OneToMany(() => Transaction, transaction => transaction.user)
-  transactions: Transaction[]
+  @OneToMany(() => Payment, payment => payment.user)
+  payments: Payment[]
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date

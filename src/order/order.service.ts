@@ -8,7 +8,7 @@ import { Product } from '@/product/entities/product.entity'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { PaginatedResponse } from '@/common/types/pagination.types'
 import { UpdateOrderDto } from '@/order/dto/update-order.dto'
-import { Transaction } from '@/transaction/entities/transaction.entity'
+import { Payment } from '@/payment/entities/payment.entity'
 
 @Injectable()
 export class OrderService {
@@ -17,8 +17,8 @@ export class OrderService {
     private orderRepository: Repository<Order>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    @InjectRepository(Transaction)
-    private transactionRepository: Repository<Transaction>,
+    @InjectRepository(Payment)
+    private paymentRepository: Repository<Payment>,
     @InjectRepository(Product)
     private productRepository: Repository<Product>
   ) {}

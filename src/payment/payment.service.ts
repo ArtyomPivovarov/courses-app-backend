@@ -1,27 +1,27 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
-import { CreateTransactionDto } from './dto/create-transaction.dto'
-import { Transaction } from './entities/transaction.entity'
+import { CreatePaymentDto } from './dto/create-payment.dto'
+import { Payment } from './entities/payment.entity'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { User } from '@/user/entities/user.entity'
 import { PaginatedResponse } from '@/common/types/pagination.types'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { Order } from '@/order/entities/order.entity'
-import { UpdateTransactionDto } from '@/transaction/dto/update-transactions.dto'
+import { UpdatePaymentDto } from '@/payment/dto/update-payment.dto'
 
 @Injectable()
-export class TransactionService {
+export class PaymentService {
   constructor(
-    @InjectRepository(Transaction)
-    private transactionRepository: Repository<Transaction>,
+    @InjectRepository(Payment)
+    private paymentRepository: Repository<Payment>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
     @InjectRepository(Order)
     private orderRepository: Repository<Order>
   ) {}
 
-  async create(createTransactionDto: CreateTransactionDto) {
-    const { orderId, userId, ...rest } = createTransactionDto
+  async create(createPaymentDto: CreatePaymentDto) {
+    const { orderId, userId, ...rest } = createPaymentDto
     const user = await this.userRepository.findOne({
       where: {
         id: userId
@@ -40,7 +40,7 @@ export class TransactionService {
       throw new BadRequestException('Product not found')
     }
 
-    return this.transactionRepository.save({
+    return this.paymentRepository.save({
       ...rest,
       user: { id: userId },
       product: { id: orderId }
@@ -49,9 +49,9 @@ export class TransactionService {
 
   async findAll(
     paginationQueryDto: PaginationQueryDto
-  ): Promise<PaginatedResponse<Transaction>> {
+  ): Promise<PaginatedResponse<Payment>> {
     const { page, limit } = paginationQueryDto
-    const [items, totalItems] = await this.transactionRepository.findAndCount({
+    const [items, totalItems] = await this.paymentRepository.findAndCount({
       select: {
         id: true,
         createdAt: true,
@@ -85,8 +85,8 @@ export class TransactionService {
     }
   }
 
-  async findOne(id: Transaction['id']) {
-    const transaction = await this.transactionRepository.findOne({
+  async findOne(id: number) {
+    const payment = await this.paymentRepository.findOne({
       select: {
         id: true,
         createdAt: true,
@@ -109,19 +109,19 @@ export class TransactionService {
         order: true
       }
     })
-    if (!transaction) {
-      throw new BadRequestException('Transaction not found')
+    if (!payment) {
+      throw new BadRequestException('Payment not found')
     }
 
-    return transaction
+    return payment
   }
 
-  async findUserTransactions(
-    userId: User['id'],
+  async findUserPayments(
+    userId: number,
     paginationQueryDto: PaginationQueryDto
-  ): Promise<PaginatedResponse<Transaction>> {
+  ): Promise<PaginatedResponse<Payment>> {
     const { page, limit } = paginationQueryDto
-    const [items, totalItems] = await this.transactionRepository.findAndCount({
+    const [items, totalItems] = await this.paymentRepository.findAndCount({
       select: {
         id: true,
         createdAt: true,
@@ -152,21 +152,17 @@ export class TransactionService {
     }
   }
 
-  async update(
-    id: Transaction['id'],
-    updateTransactionDto: UpdateTransactionDto
-  ) {
-    const transaction = await this.transactionRepository.findOne({
+  async update(id: number, updatePaymentDto: UpdatePaymentDto) {
+    const payment = await this.paymentRepository.findOne({
       where: {
         id
       }
     })
-    if (!transaction) {
-      throw new BadRequestException('Transaction not found')
+    if (!payment) {
+      throw new BadRequestException('Payment not found')
     }
 
-    const { orderId, userId, ...rest } = updateTransactionDto
-    const transactionUpdatePayload = { ...rest }
+    const { orderId, userId, ...rest } = updatePaymentDto
 
     if (orderId) {
       const product = await this.orderRepository.findOne({
@@ -178,7 +174,7 @@ export class TransactionService {
         throw new BadRequestException('Product not found')
       }
 
-      transactionUpdatePayload['order'] = { id: orderId }
+      rest['order'] = { id: orderId }
     }
 
     if (userId) {
@@ -191,22 +187,22 @@ export class TransactionService {
         throw new BadRequestException('User not found')
       }
 
-      transactionUpdatePayload['user'] = { id: userId }
+      rest['user'] = { id: userId }
     }
 
-    return this.transactionRepository.update(id, transactionUpdatePayload)
+    return this.paymentRepository.update(id, rest)
   }
 
-  async remove(id: Transaction['id']) {
-    const transaction = await this.transactionRepository.findOne({
+  async remove(id: number) {
+    const payment = await this.paymentRepository.findOne({
       where: {
         id
       }
     })
-    if (!transaction) {
-      throw new BadRequestException('Transaction not found')
+    if (!payment) {
+      throw new BadRequestException('Payment not found')
     }
 
-    return this.transactionRepository.delete(id)
+    return this.paymentRepository.delete(id)
   }
 }

@@ -14,22 +14,22 @@ import { Currency } from '@/currency/entities/currency.entity'
 
 @Entity()
 @Check(`"amount" > 0`)
-export class Transaction {
-  @PrimaryGeneratedColumn({ name: 'transaction_id' })
+export class Payment {
+  @PrimaryGeneratedColumn({ name: 'payment_id' })
   id: number
 
   @Column('decimal', { precision: 19, scale: 10 })
   amount: number
 
-  @ManyToOne(() => Currency, currency => currency.transactions)
+  @ManyToOne(() => Currency, currency => currency.payments)
   @JoinColumn({ name: 'currency_code' })
   currency: Currency
 
-  @ManyToOne(() => User, user => user.transactions)
+  @ManyToOne(() => User, user => user.payments)
   @JoinColumn({ name: 'user_id' })
   user: User
 
-  @OneToOne(() => Order, order => order.transaction)
+  @OneToOne(() => Order, order => order.payment)
   @JoinColumn({ name: 'order_id' })
   order: Order
 
