@@ -10,7 +10,6 @@ import {
   UpdateDateColumn
 } from 'typeorm'
 import { ProductCategory } from '@/product-category/entities/product-category.entity'
-import { Order } from '@/order/entities/order.entity'
 import { ProductPrice } from '@/product-price/entities/product-price.entity'
 import { CartItem } from '@/cart-item/entities/cart-item.entity'
 
@@ -41,9 +40,6 @@ export class Product {
 
   @OneToMany(() => CartItem, cartItem => cartItem.product)
   cartItems: CartItem[]
-
-  @OneToMany(() => Order, order => order.product)
-  orders: Order[]
 
   @Column({ nullable: true })
   rating: number

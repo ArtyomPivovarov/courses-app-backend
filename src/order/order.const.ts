@@ -1,6 +1,6 @@
 import { OrderStatus } from '@/order/order.types'
 
-export const TRANSACTION_NEED_PURCHASE_STATUSES = [
+export const PAYMENT_NEED_ORDER_STATUSES = [
   OrderStatus.PAID,
   OrderStatus.PENDING,
   OrderStatus.DELIVERED

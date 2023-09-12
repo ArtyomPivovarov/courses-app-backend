@@ -30,6 +30,7 @@ export class Transaction {
   user: User
 
   @OneToOne(() => Order, order => order.transaction)
+  @JoinColumn({ name: 'order_id' })
   order: Order
 
   @CreateDateColumn({ name: 'created_at' })

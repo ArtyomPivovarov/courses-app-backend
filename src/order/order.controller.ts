@@ -17,35 +17,36 @@ import { Role } from '@/role/role.enum'
 import { RolesGuard } from '@/role/roles.guard'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { UpdateOrderDto } from '@/order/dto/update-order.dto'
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('orders')
+@ApiBearerAuth()
+@Roles(Role.Admin)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
+  @ApiOperation({ summary: 'Create a new order' })
   @Post()
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
   create(@Body() createOrderDto: CreateOrderDto) {
     return this.orderService.create(createOrderDto)
   }
 
+  @ApiOperation({ summary: 'Get all orders' })
   @Get()
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
   async findAll(@Query() paginationQueryDto: PaginationQueryDto) {
     return this.orderService.findAll(paginationQueryDto)
   }
 
+  @ApiOperation({ summary: 'Get an order by id' })
   @Get(':id')
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
   findOne(@Param('id') id: string) {
     return this.orderService.findOne(+id)
   }
 
+  @ApiOperation({ summary: 'Get all orders by user id' })
   @Get('user/:userId')
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
   async findByUser(
     @Param('userId') userId: number,
     @Query() paginationQueryDto: PaginationQueryDto
@@ -53,19 +54,8 @@ export class OrderController {
     return this.orderService.findUserOrders(+userId, paginationQueryDto)
   }
 
-  @Get('product/:productId')
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  async findByProduct(
-    @Param('productId') productId: number,
-    @Query() paginationQueryDto: PaginationQueryDto
-  ) {
-    return this.orderService.findProductOrders(+productId, paginationQueryDto)
-  }
-
+  @ApiOperation({ summary: 'Update an order by id' })
   @Patch(':id')
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
   async update(
     @Param('id') id: string,
     @Body() updateOrderDto: UpdateOrderDto
@@ -73,9 +63,8 @@ export class OrderController {
     await this.orderService.update(+id, updateOrderDto)
   }
 
+  @ApiOperation({ summary: 'Delete an order by id' })
   @Delete(':id')
-  @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
   async remove(@Param('id') id: string) {
     await this.orderService.remove(+id)
   }

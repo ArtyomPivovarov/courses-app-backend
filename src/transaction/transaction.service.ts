@@ -62,9 +62,8 @@ export class TransactionService {
         },
         order: {
           id: true,
-          createdAt: true,
-          quantity: true,
-          status: true
+          status: true,
+          createdAt: true
         }
       },
       relations: {
@@ -98,14 +97,8 @@ export class TransactionService {
         },
         order: {
           id: true,
-          createdAt: true,
-          product: {
-            id: true,
-            slug: true,
-            name: true
-          },
-          quantity: true,
-          status: true
+          status: true,
+          createdAt: true
         }
       },
       where: {
@@ -113,9 +106,7 @@ export class TransactionService {
       },
       relations: {
         user: true,
-        order: {
-          product: true
-        }
+        order: true
       }
     })
     if (!transaction) {
@@ -137,12 +128,6 @@ export class TransactionService {
         order: {
           id: true,
           createdAt: true,
-          product: {
-            id: true,
-            slug: true,
-            name: true
-          },
-          quantity: true,
           status: true
         }
       },
@@ -150,9 +135,7 @@ export class TransactionService {
         user: { id: userId }
       },
       relations: {
-        order: {
-          product: true
-        }
+        order: true
       },
       take: limit,
       skip: (page - 1) * limit

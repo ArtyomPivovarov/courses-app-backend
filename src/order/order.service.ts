@@ -9,7 +9,6 @@ import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { PaginatedResponse } from '@/common/types/pagination.types'
 import { UpdateOrderDto } from '@/order/dto/update-order.dto'
 import { Transaction } from '@/transaction/entities/transaction.entity'
-import { TRANSACTION_NEED_PURCHASE_STATUSES } from '@/order/order.const'
 
 @Injectable()
 export class OrderService {
@@ -25,7 +24,7 @@ export class OrderService {
   ) {}
 
   async create(createOrderDto: CreateOrderDto) {
-    const { userId, productId, transactionId, ...rest } = createOrderDto
+    const { userId, ...rest } = createOrderDto
     const user = await this.userRepository.findOne({
       where: {
         id: userId
@@ -35,69 +34,9 @@ export class OrderService {
       throw new BadRequestException('User not found')
     }
 
-    const product = await this.productRepository.findOne({
-      where: {
-        id: productId
-      }
-    })
-    if (!product) {
-      throw new BadRequestException('Product not found')
-    }
-    if (product.stock < rest.quantity) {
-      throw new BadRequestException('Not enough stock')
-    }
-
-    if (
-      TRANSACTION_NEED_PURCHASE_STATUSES.includes(createOrderDto.status) &&
-      !transactionId
-    ) {
-      throw new BadRequestException('Transaction is required')
-    }
-
-    if (transactionId) {
-      const transaction = await this.transactionRepository.findOne({
-        select: {
-          id: true,
-          amount: true,
-          currency: {
-            code: true
-          },
-          user: {
-            id: true
-          },
-          order: {
-            id: true
-          }
-        },
-        where: {
-          id: transactionId
-        },
-        relations: {
-          user: true,
-          order: true
-        }
-      })
-      if (!transaction || transaction.user.id !== userId) {
-        throw new BadRequestException('Transaction not found')
-      }
-
-      if (transaction.order?.id) {
-        throw new BadRequestException('Transaction already used')
-      }
-
-      if (
-        +transaction.amount !==
-        rest.quantity * product['price' + transaction.currency]
-      ) {
-        throw new BadRequestException('Invalid transaction amount')
-      }
-    }
-
     return this.orderRepository.save({
       ...rest,
-      user: { id: userId },
-      product: { id: productId },
-      transaction: transactionId ? { id: transactionId } : undefined
+      user: { id: userId }
     })
   }
 
@@ -108,15 +47,11 @@ export class OrderService {
     const [items, totalItems] = await this.orderRepository.findAndCount({
       select: {
         id: true,
+        status: true,
         createdAt: true,
         user: {
           id: true,
           email: true,
-          name: true
-        },
-        product: {
-          id: true,
-          slug: true,
           name: true
         }
       },
@@ -124,8 +59,7 @@ export class OrderService {
         createdAt: 'DESC'
       },
       relations: {
-        user: true,
-        product: true
+        user: true
       },
       take: limit,
       skip: (page - 1) * limit
@@ -147,36 +81,18 @@ export class OrderService {
       select: {
         id: true,
         createdAt: true,
-        quantity: true,
         status: true,
         user: {
           id: true,
           email: true,
           name: true
-        },
-        product: {
-          id: true,
-          slug: true,
-          name: true
-        },
-        transaction: {
-          id: true,
-          amount: true,
-          currency: {
-            code: true
-          },
-          createdAt: true
         }
       },
       where: {
         id
       },
       relations: {
-        user: true,
-        product: true,
-        transaction: {
-          currency: true
-        }
+        user: true
       }
     })
     if (!order) {
@@ -187,27 +103,15 @@ export class OrderService {
   }
 
   async findUserOrders(
-    userId: User['id'],
+    userId: number,
     paginationQueryDto: PaginationQueryDto
   ): Promise<PaginatedResponse<Order>> {
     const { page, limit } = paginationQueryDto
     const [items, totalItems] = await this.orderRepository.findAndCount({
       select: {
         id: true,
-        createdAt: true,
-        product: {
-          id: true,
-          slug: true,
-          name: true
-        },
-        transaction: {
-          id: true,
-          amount: true,
-          currency: {
-            code: true
-          },
-          createdAt: true
-        }
+        status: true,
+        createdAt: true
       },
       where: {
         user: {
@@ -217,12 +121,6 @@ export class OrderService {
       order: {
         createdAt: 'DESC'
       },
-      relations: {
-        product: true,
-        transaction: {
-          currency: true
-        }
-      },
       take: limit,
       skip: (page - 1) * limit
     })
@@ -238,83 +136,22 @@ export class OrderService {
     }
   }
 
-  async findProductOrders(
-    productId: Product['id'],
-    paginationQueryDto: PaginationQueryDto
-  ): Promise<PaginatedResponse<Order>> {
-    const { page, limit } = paginationQueryDto
-    const [items, totalItems] = await this.orderRepository.findAndCount({
-      select: {
-        id: true,
-        createdAt: true,
-        user: {
-          id: true,
-          email: true,
-          name: true
-        },
-        transaction: {
-          id: true,
-          amount: true,
-          currency: {
-            code: true
-          },
-          createdAt: true
-        }
-      },
-      where: {
-        product: {
-          id: productId
-        }
-      },
-      order: {
-        createdAt: 'DESC'
-      },
-      relations: {
-        user: true,
-        transaction: {
-          currency: true
-        }
-      },
-      take: limit,
-      skip: (page - 1) * limit
-    })
-
-    return {
-      items,
-      meta: {
-        page,
-        limit,
-        totalItems,
-        totalPages: Math.ceil(totalItems / limit)
-      }
-    }
-  }
-
-  async update(id: Order['id'], updateOrderDto: UpdateOrderDto) {
-    const { userId, productId, transactionId, ...rest } = updateOrderDto
+  async update(id: number, updateOrderDto: UpdateOrderDto) {
+    const { userId, ...rest } = updateOrderDto
     const order = await this.orderRepository.findOne({
       select: {
-        id: true,
-        user: {
-          id: true
-        },
-        product: {
-          id: true
-        }
+        id: true
       },
       where: {
         id
       },
       relations: {
-        user: true,
-        product: true
+        user: true
       }
     })
     if (!order) {
       throw new BadRequestException('Order not found')
     }
-
-    const orderUpdatePayload = {}
 
     if (userId) {
       const user = await this.userRepository.findOne({
@@ -326,84 +163,14 @@ export class OrderService {
         throw new BadRequestException('User not found')
       }
 
-      orderUpdatePayload['user'] = { id: userId }
+      rest['user'] = { id: userId }
     }
 
-    const product = await this.productRepository.findOne({
-      where: {
-        id: productId || order.product.id
-      }
-    })
-
-    if (productId) {
-      if (!product || product.id !== productId) {
-        throw new BadRequestException('Product not found')
-      }
-
-      orderUpdatePayload['product'] = { id: productId }
-    }
-
-    if (product.stock < rest.quantity) {
-      throw new BadRequestException('Not enough stock')
-    }
-
-    if (
-      TRANSACTION_NEED_PURCHASE_STATUSES.includes(rest.status) &&
-      !transactionId
-    ) {
-      throw new BadRequestException('Transaction is required')
-    }
-
-    if (transactionId) {
-      const transaction = await this.transactionRepository.findOne({
-        select: {
-          id: true,
-          amount: true,
-          currency: {
-            code: true
-          },
-          user: {
-            id: true
-          }
-        },
-        where: {
-          id: transactionId
-        },
-        relations: {
-          user: true
-        }
-      })
-      if (!transaction || transaction.user.id !== (userId ?? order.user.id)) {
-        throw new BadRequestException('Transaction not found')
-      }
-
-      if (transaction.order?.id && transaction.order.id !== id) {
-        throw new BadRequestException('Transaction already used')
-      }
-
-      if (
-        +transaction.amount !==
-        rest.quantity * product['price' + transaction.currency]
-      ) {
-        throw new BadRequestException('Invalid transaction amount')
-      }
-
-      orderUpdatePayload['transaction'] = { id: transactionId }
-    }
-
-    return await this.orderRepository.update(id, orderUpdatePayload)
+    return await this.orderRepository.update(id, rest)
   }
 
-  async remove(id: Order['id']) {
-    const isExist = await this.orderRepository.findOne({
-      where: {
-        id
-      }
-    })
-    if (!isExist) {
-      throw new BadRequestException('Order not found')
-    }
-
-    return await this.orderRepository.delete(id)
+  async remove(id: number) {
+    const order = await this.findOne(id)
+    return this.orderRepository.delete(order.id)
   }
 }
