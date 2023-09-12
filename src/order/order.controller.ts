@@ -76,7 +76,7 @@ export class OrderController {
   @Delete(':id')
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async delete(@Param('id') id: string) {
-    await this.orderService.delete(+id)
+  async remove(@Param('id') id: string) {
+    await this.orderService.remove(+id)
   }
 }

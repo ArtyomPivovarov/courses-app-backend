@@ -53,7 +53,7 @@ export class CurrencyService {
     return this.currencyRepository.update(code, updateCurrencyDto)
   }
 
-  async delete(code: string) {
+  async remove(code: string) {
     const currency = await this.currencyRepository.findOne({
       where: { code }
     })

@@ -394,7 +394,7 @@ export class OrderService {
     return await this.orderRepository.update(id, orderUpdatePayload)
   }
 
-  async delete(id: Order['id']) {
+  async remove(id: Order['id']) {
     const isExist = await this.orderRepository.findOne({
       where: {
         id

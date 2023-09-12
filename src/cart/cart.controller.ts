@@ -53,7 +53,7 @@ export class CartController {
 
   @ApiOperation({ summary: 'Delete a cart by id' })
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.cartService.delete(+id)
+  remove(@Param('id') id: string) {
+    return this.cartService.remove(+id)
   }
 }

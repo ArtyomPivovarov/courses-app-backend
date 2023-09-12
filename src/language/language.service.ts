@@ -42,7 +42,7 @@ export class LanguageService {
     return await this.languageRepository.update(code, updateLanguageDto)
   }
 
-  async delete(code: string): Promise<void> {
+  async remove(code: string): Promise<void> {
     const language = await this.languageRepository.findOne({
       where: { code }
     })

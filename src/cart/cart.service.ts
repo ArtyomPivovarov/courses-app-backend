@@ -119,7 +119,7 @@ export class CartService {
     })
   }
 
-  async delete(id: number) {
+  async remove(id: number) {
     const cart = await this.findOne(id)
     return this.cartRepository.remove(cart)
   }

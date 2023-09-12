@@ -56,7 +56,7 @@ export class CartItemController {
 
   @ApiOperation({ summary: 'Delete a cart item by id' })
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.cartItemService.delete(+id)
+  remove(@Param('id') id: string) {
+    return this.cartItemService.remove(+id)
   }
 }

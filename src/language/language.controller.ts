@@ -82,7 +82,7 @@ export class LanguageController {
   @Delete(':code')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(Role.Admin)
-  delete(@Param('code') code: string): Promise<void> {
-    return this.languageService.delete(code)
+  remove(@Param('code') code: string): Promise<void> {
+    return this.languageService.remove(code)
   }
 }

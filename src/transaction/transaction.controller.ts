@@ -69,7 +69,7 @@ export class TransactionController {
   @Delete(':id')
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  async delete(@Param('id') id: number) {
-    await this.transactionService.delete(+id)
+  async remove(@Param('id') id: number) {
+    await this.transactionService.remove(+id)
   }
 }

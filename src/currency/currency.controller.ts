@@ -55,7 +55,7 @@ export class CurrencyController {
 
   @ApiOperation({ summary: 'Delete currency by code' })
   @Delete(':code')
-  delete(@Param('code') code: string) {
-    return this.currencyService.delete(code)
+  remove(@Param('code') code: string) {
+    return this.currencyService.remove(code)
   }
 }

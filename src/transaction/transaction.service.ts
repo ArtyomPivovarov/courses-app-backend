@@ -214,7 +214,7 @@ export class TransactionService {
     return this.transactionRepository.update(id, transactionUpdatePayload)
   }
 
-  async delete(id: Transaction['id']) {
+  async remove(id: Transaction['id']) {
     const transaction = await this.transactionRepository.findOne({
       where: {
         id

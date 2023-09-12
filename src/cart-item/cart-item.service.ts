@@ -185,7 +185,7 @@ export class CartItemService {
     return this.cartItemRepository.update(cartItem.id, rest)
   }
 
-  async delete(id: number) {
+  async remove(id: number) {
     const cartItem = await this.findOne(id)
     return this.cartItemRepository.remove(cartItem)
   }
