@@ -15,7 +15,8 @@ import { CurrencyModule } from '@/currency/currency.module'
 import { CartModule } from './cart/cart.module'
 import { CartItemModule } from './cart-item/cart-item.module'
 import { OrderDetailModule } from './order-detail/order-detail.module'
-import { PaymentMethodModule } from './payment-method/payment-method.module';
+import { PaymentMethodModule } from './payment-method/payment-method.module'
+import { DevtoolsModule } from '@nestjs/devtools-integration'
 
 @Module({
   imports: [
@@ -33,6 +34,9 @@ import { PaymentMethodModule } from './payment-method/payment-method.module';
         synchronize: true
       }),
       inject: [ConfigService]
+    }),
+    DevtoolsModule.register({
+      http: process.env.NODE_ENV !== 'production'
     }),
     AuthModule,
     UserModule,

@@ -13,7 +13,11 @@ import { version } from 'package.json'
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({ ignoreTrailingSlash: true })
+    new FastifyAdapter({ ignoreTrailingSlash: true }),
+    {
+      snapshot: true,
+      abortOnError: false
+    }
   )
 
   app.setGlobalPrefix('api')
