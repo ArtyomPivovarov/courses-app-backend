@@ -22,7 +22,9 @@ export class Payment {
   @JoinColumn({ name: 'order_id' })
   order: Order
 
-  @ManyToOne(() => PaymentMethod, paymentMethod => paymentMethod.payments)
+  @ManyToOne(() => PaymentMethod, paymentMethod => paymentMethod.payments, {
+    onDelete: 'SET NULL'
+  })
   @JoinColumn({ name: 'payment_method_id' })
   paymentMethod: PaymentMethod
 

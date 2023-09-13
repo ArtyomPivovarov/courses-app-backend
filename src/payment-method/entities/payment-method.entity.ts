@@ -22,7 +22,7 @@ export class PaymentMethod {
   @Column({ name: 'payment_method_description', length: 100 })
   description: string
 
-  @Column({ nullable: true })
+  @Column('integer', { nullable: true })
   rating: number
 
   @Column('jsonb', { nullable: true })

@@ -41,6 +41,9 @@ export class PaymentService {
     if (!paymentMethod) {
       throw new BadRequestException('Payment method not found')
     }
+    if (!paymentMethod.isActive) {
+      throw new BadRequestException('Payment method is not active')
+    }
 
     const currency = await this.currencyRepository.findOne({
       where: {

@@ -1,26 +1,67 @@
-import { Injectable } from '@nestjs/common';
-import { CreatePaymentMethodDto } from './dto/create-payment-method.dto';
-import { UpdatePaymentMethodDto } from './dto/update-payment-method.dto';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common'
+import { CreatePaymentMethodDto } from './dto/create-payment-method.dto'
+import { UpdatePaymentMethodDto } from './dto/update-payment-method.dto'
+import { PaymentMethod } from '@/payment-method/entities/payment-method.entity'
+import { Repository } from 'typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
 export class PaymentMethodService {
-  create(createPaymentMethodDto: CreatePaymentMethodDto) {
-    return 'This action adds a new paymentMethod';
+  constructor(
+    @InjectRepository(PaymentMethod)
+    private paymentMethodRepository: Repository<PaymentMethod>
+  ) {}
+
+  async create(createPaymentMethodDto: CreatePaymentMethodDto) {
+    const paymentMethod = await this.paymentMethodRepository.findOne({
+      where: { name: createPaymentMethodDto.name }
+    })
+    if (paymentMethod) {
+      throw new BadRequestException(
+        'Payment method with this name already exists'
+      )
+    }
+
+    return this.paymentMethodRepository.save(createPaymentMethodDto)
   }
 
   findAll() {
-    return `This action returns all paymentMethod`;
+    return this.paymentMethodRepository.find({
+      order: {
+        rating: {
+          direction: 'DESC',
+          nulls: 'LAST'
+        },
+        createdAt: 'DESC'
+      }
+    })
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} paymentMethod`;
+  async findOne(id: number) {
+    const paymentMethod = await this.paymentMethodRepository.findOne({
+      where: { id }
+    })
+    if (!paymentMethod) {
+      throw new NotFoundException('Payment method not found')
+    }
+
+    return paymentMethod
   }
 
-  update(id: number, updatePaymentMethodDto: UpdatePaymentMethodDto) {
-    return `This action updates a #${id} paymentMethod`;
+  async update(id: number, updatePaymentMethodDto: UpdatePaymentMethodDto) {
+    const paymentMethod = await this.findOne(id)
+    return this.paymentMethodRepository.update(
+      paymentMethod.id,
+      updatePaymentMethodDto
+    )
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} paymentMethod`;
+  async remove(id: number) {
+    const paymentMethod = await this.findOne(id)
+    return this.paymentMethodRepository.remove(paymentMethod)
   }
 }
