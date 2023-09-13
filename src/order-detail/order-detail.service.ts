@@ -177,7 +177,7 @@ export class OrderDetailService {
     }
 
     if (rest.quantity) {
-      if (orderDetail.order.status !== OrderStatus.CREATED) {
+      if (orderDetail.order.status !== OrderStatus.Created) {
         throw new BadRequestException(
           'Cannot update quantity of order item in non-created order'
         )

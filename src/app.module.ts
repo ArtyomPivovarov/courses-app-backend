@@ -17,6 +17,9 @@ import { CartItemModule } from './cart-item/cart-item.module'
 import { OrderDetailModule } from './order-detail/order-detail.module'
 import { PaymentMethodModule } from './payment-method/payment-method.module'
 import { DevtoolsModule } from '@nestjs/devtools-integration'
+import { ShippingModule } from './shipping/shipping.module';
+import { ShippingCarrierModule } from './shipping-carrier/shipping-carrier.module';
+import { ShippingMethodModule } from './shipping-method/shipping-method.module';
 
 @Module({
   imports: [
@@ -50,7 +53,10 @@ import { DevtoolsModule } from '@nestjs/devtools-integration'
     LanguageModule,
     PaymentModule,
     CurrencyModule,
-    PaymentMethodModule
+    PaymentMethodModule,
+    ShippingModule,
+    ShippingCarrierModule,
+    ShippingMethodModule
   ],
   controllers: [AppController],
   providers: [AppService]
