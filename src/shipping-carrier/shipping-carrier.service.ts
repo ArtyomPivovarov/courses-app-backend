@@ -1,26 +1,60 @@
-import { Injectable } from '@nestjs/common';
-import { CreateShippingCarrierDto } from './dto/create-shipping-carrier.dto';
-import { UpdateShippingCarrierDto } from './dto/update-shipping-carrier.dto';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common'
+import { CreateShippingCarrierDto } from './dto/create-shipping-carrier.dto'
+import { UpdateShippingCarrierDto } from './dto/update-shipping-carrier.dto'
+import { ShippingCarrier } from '@/shipping-carrier/entities/shipping-carrier.entity'
+import { Repository } from 'typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
 export class ShippingCarrierService {
-  create(createShippingCarrierDto: CreateShippingCarrierDto) {
-    return 'This action adds a new shippingCarrier';
+  constructor(
+    @InjectRepository(ShippingCarrier)
+    private readonly shippingCarrierRepository: Repository<ShippingCarrier>
+  ) {}
+  async create(createShippingCarrierDto: CreateShippingCarrierDto) {
+    const shippingCarrier = await this.shippingCarrierRepository.findOne({
+      where: {
+        name: createShippingCarrierDto.name
+      }
+    })
+    if (shippingCarrier) {
+      throw new BadRequestException('Shipping carrier already exists')
+    }
+
+    return this.shippingCarrierRepository.save(createShippingCarrierDto)
   }
 
   findAll() {
-    return `This action returns all shippingCarrier`;
+    return this.shippingCarrierRepository.find()
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} shippingCarrier`;
+  async findOne(id: number) {
+    const shippingCarrier = await this.shippingCarrierRepository.findOne({
+      where: {
+        id
+      }
+    })
+    if (!shippingCarrier) {
+      throw new NotFoundException('Shipping carrier not found')
+    }
+
+    return shippingCarrier
   }
 
-  update(id: number, updateShippingCarrierDto: UpdateShippingCarrierDto) {
-    return `This action updates a #${id} shippingCarrier`;
+  async update(id: number, updateShippingCarrierDto: UpdateShippingCarrierDto) {
+    const shippingCarrier = await this.findOne(id)
+    return this.shippingCarrierRepository.update(
+      shippingCarrier.id,
+      updateShippingCarrierDto
+    )
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} shippingCarrier`;
+  async remove(id: number) {
+    const shippingCarrier = await this.findOne(id)
+    return this.shippingCarrierRepository.remove(shippingCarrier)
   }
 }
