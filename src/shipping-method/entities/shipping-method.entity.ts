@@ -1,5 +1,12 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn
+} from 'typeorm'
 import { Shipping } from '@/shipping/entities/shipping.entity'
+import { ShippingCarrier } from '@/shipping-carrier/entities/shipping-carrier.entity'
 
 @Entity()
 export class ShippingMethod {
@@ -11,6 +18,12 @@ export class ShippingMethod {
 
   @Column({ length: 300 })
   description: string
+
+  @ManyToMany(
+    () => ShippingCarrier,
+    shippingCarrier => shippingCarrier.shippingMethods
+  )
+  shippingCarriers: ShippingCarrier[]
 
   @OneToMany(() => Shipping, shipping => shipping.shippingMethod)
   shippings: Shipping[]

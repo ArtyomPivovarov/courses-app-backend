@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsBoolean,
   IsObject,
   IsOptional,
@@ -21,6 +22,9 @@ export class CreateShippingCarrierDto {
   @IsString()
   @MaxLength(255)
   websiteUrl: string
+
+  @IsArray()
+  shippingMethodIds: number[]
 
   @IsOptional()
   @IsObject()
