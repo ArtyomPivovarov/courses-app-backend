@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -13,6 +14,7 @@ import { ProductCategory } from '@/product-category/entities/product-category.en
 import { ProductPrice } from '@/product-price/entities/product-price.entity'
 import { CartItem } from '@/cart-item/entities/cart-item.entity'
 import { OrderDetail } from '@/order-detail/entities/order-detail.entity'
+import { Discount } from '@/discount/entities/discount.entity'
 
 @Entity()
 @Check(`"stock" >= 0`)
@@ -58,6 +60,9 @@ export class Product {
 
   @OneToMany(() => OrderDetail, orderDetail => orderDetail.product)
   orderDetails: OrderDetail[]
+
+  @ManyToMany(() => Discount, discount => discount.products)
+  discounts: Discount[]
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date

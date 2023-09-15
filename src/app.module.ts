@@ -20,6 +20,7 @@ import { DevtoolsModule } from '@nestjs/devtools-integration'
 import { ShippingModule } from './shipping/shipping.module';
 import { ShippingCarrierModule } from './shipping-carrier/shipping-carrier.module';
 import { ShippingMethodModule } from './shipping-method/shipping-method.module';
+import { DiscountModule } from './discount/discount.module';
 
 @Module({
   imports: [
@@ -56,7 +57,8 @@ import { ShippingMethodModule } from './shipping-method/shipping-method.module';
     PaymentMethodModule,
     ShippingModule,
     ShippingCarrierModule,
-    ShippingMethodModule
+    ShippingMethodModule,
+    DiscountModule
   ],
   controllers: [AppController],
   providers: [AppService]
