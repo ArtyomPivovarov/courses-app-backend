@@ -1,4 +1,5 @@
 import {
+  Check,
   Column,
   CreateDateColumn,
   Entity,
@@ -10,6 +11,7 @@ import {
 import { Product } from '@/product/entities/product.entity'
 
 @Entity()
+@Check(`"discount_percentage" >= 0 AND "discount_percentage" <= 100`)
 export class Discount {
   @PrimaryGeneratedColumn({ name: 'discount_id' })
   id: number
