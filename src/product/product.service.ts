@@ -49,42 +49,66 @@ export class ProductService {
   }
 
   async findAll(
-    paginationQueryDto: PaginationQueryDto,
-    onlyActive: boolean = true
+    paginationQueryDto: PaginationQueryDto
   ): Promise<PaginatedResponse<ProductListItem>> {
     const { page, limit } = paginationQueryDto
 
-    const queryBuilder = this.productRepository
-      .createQueryBuilder('product')
-      .leftJoinAndSelect('product.category', 'category')
-      .leftJoinAndSelect('product.prices', 'prices')
-      .leftJoinAndSelect('prices.currency', 'currency')
-      .select([
-        'product.id',
-        'product.slug',
-        'product.isActive',
-        'product.name',
-        'product.stock',
-        'product.rating',
-        'product.createdAt',
-        'product.translations',
-        'prices.price',
-        'currency.code',
-        'currency.symbol',
-        'category.id',
-        'category.slug',
-        'category.name',
-        'category.translations'
-      ])
-      .where(onlyActive ? 'product.isActive = :isActive' : '1=1', {
-        isActive: onlyActive
-      })
-      .orderBy('product.rating', 'DESC', 'NULLS LAST')
-      .addOrderBy('product.createdAt', 'DESC')
-      .take(limit)
-      .skip((page - 1) * limit)
-
-    const [items, totalItems] = await queryBuilder.getManyAndCount()
+    const [items, totalItems] = await this.productRepository.findAndCount({
+      select: {
+        id: true,
+        slug: true,
+        isActive: true,
+        name: true,
+        stock: true,
+        rating: true,
+        createdAt: true,
+        translations: {
+          select: {
+            name: true,
+            description: true
+          }
+        },
+        prices: {
+          price: true,
+          currency: {
+            code: true,
+            symbol: true
+          }
+        },
+        discounts: {
+          id: true,
+          name: true,
+          discountPercentage: true
+        },
+        category: {
+          id: true,
+          slug: true,
+          name: true,
+          translations: {
+            select: {
+              name: true,
+              description: true
+            }
+          }
+        }
+      },
+      order: {
+        rating: {
+          direction: 'DESC',
+          nulls: 'LAST'
+        },
+        createdAt: 'DESC'
+      },
+      relations: {
+        prices: {
+          currency: true
+        },
+        discounts: true,
+        category: true
+      },
+      take: limit,
+      skip: (page - 1) * limit
+    })
 
     return {
       items,
@@ -102,7 +126,8 @@ export class ProductService {
       where: { slug },
       relations: {
         category: true,
-        prices: true
+        prices: true,
+        discounts: true
       }
     })
     if (!product) {
