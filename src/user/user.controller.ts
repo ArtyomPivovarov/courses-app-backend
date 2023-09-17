@@ -19,11 +19,15 @@ import { RolesGuard } from '@/role/roles.guard'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { UpdateUserDto } from '@/user/dto/update-user.dto'
 import { RegisterUserDto } from '@/user/dto/register-user.dto'
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @ApiOperation({ summary: 'Create user' })
+  @ApiBearerAuth()
   @Post()
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -31,11 +35,8 @@ export class UserController {
     return this.userService.create(createUserDto)
   }
 
-  @Post('register')
-  async register(@Body() registerUserDto: RegisterUserDto) {
-    return this.userService.register(registerUserDto)
-  }
-
+  @ApiOperation({ summary: 'Get all users' })
+  @ApiBearerAuth()
   @Get()
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -43,6 +44,7 @@ export class UserController {
     return this.userService.findAll(paginationQueryDto)
   }
 
+  @ApiOperation({ summary: 'Get user by id' })
   @Get(':id')
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -50,12 +52,7 @@ export class UserController {
     return this.userService.findOneById(+id)
   }
 
-  @Get('profile')
-  @UseGuards(JwtAuthGuard)
-  async getProfile(@Request() req) {
-    return this.userService.getProfile(+req.user.id)
-  }
-
+  @ApiOperation({ summary: 'Update user by id' })
   @Patch(':id')
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -63,6 +60,20 @@ export class UserController {
     await this.userService.update(+id, updateUserDto)
   }
 
+  @ApiOperation({ summary: 'Register user' })
+  @Post('register')
+  async register(@Body() registerUserDto: RegisterUserDto) {
+    return this.userService.register(registerUserDto)
+  }
+
+  @ApiOperation({ summary: 'Get your profile' })
+  @Get('profile')
+  @UseGuards(JwtAuthGuard)
+  async getProfile(@Request() req) {
+    return this.userService.getProfile(+req.user.id)
+  }
+
+  @ApiOperation({ summary: 'Update your profile' })
   @Patch('profile')
   @UseGuards(JwtAuthGuard)
   async updateProfile(
