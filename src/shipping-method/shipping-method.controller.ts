@@ -12,14 +12,13 @@ import { ShippingMethodService } from './shipping-method.service'
 import { CreateShippingMethodDto } from './dto/create-shipping-method.dto'
 import { UpdateShippingMethodDto } from './dto/update-shipping-method.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { Roles } from '@/role/roles.decorator'
 import { Role } from '@/role/role.enum'
 import { RolesGuard } from '@/role/roles.guard'
 
 @ApiTags('shipping-methods')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(RolesGuard)
 @Roles(Role.Admin)
 @Controller('shipping-methods')
 export class ShippingMethodController {

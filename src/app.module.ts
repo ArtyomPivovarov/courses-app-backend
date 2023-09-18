@@ -17,10 +17,12 @@ import { CartItemModule } from './cart-item/cart-item.module'
 import { OrderDetailModule } from './order-detail/order-detail.module'
 import { PaymentMethodModule } from './payment-method/payment-method.module'
 import { DevtoolsModule } from '@nestjs/devtools-integration'
-import { ShippingModule } from './shipping/shipping.module';
-import { ShippingCarrierModule } from './shipping-carrier/shipping-carrier.module';
-import { ShippingMethodModule } from './shipping-method/shipping-method.module';
-import { DiscountModule } from './discount/discount.module';
+import { ShippingModule } from './shipping/shipping.module'
+import { ShippingCarrierModule } from './shipping-carrier/shipping-carrier.module'
+import { ShippingMethodModule } from './shipping-method/shipping-method.module'
+import { DiscountModule } from './discount/discount.module'
+import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
+import { APP_GUARD } from '@nestjs/core'
 
 @Module({
   imports: [
@@ -61,6 +63,13 @@ import { DiscountModule } from './discount/discount.module';
     DiscountModule
   ],
   controllers: [AppController],
-  providers: [AppService]
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useExisting: JwtAuthGuard
+    },
+    JwtAuthGuard
+  ]
 })
 export class AppModule {}

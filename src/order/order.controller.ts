@@ -10,7 +10,6 @@ import {
   UseGuards
 } from '@nestjs/common'
 import { OrderService } from './order.service'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { CreateOrderDto } from '@/order/dto/create-order.dto'
 import { Roles } from '@/role/roles.decorator'
 import { Role } from '@/role/role.enum'
@@ -22,7 +21,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 @ApiTags('orders')
 @ApiBearerAuth()
 @Roles(Role.Admin)
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(RolesGuard)
 @Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}

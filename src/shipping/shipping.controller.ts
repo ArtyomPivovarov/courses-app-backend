@@ -14,14 +14,13 @@ import { CreateShippingDto } from './dto/create-shipping.dto'
 import { UpdateShippingDto } from './dto/update-shipping.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { RolesGuard } from '@/role/roles.guard'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { Role } from '@/role/role.enum'
 import { Roles } from '@/role/roles.decorator'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 
 @ApiTags('shippings')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(RolesGuard)
 @Roles(Role.Admin)
 @Controller('shippings')
 export class ShippingController {

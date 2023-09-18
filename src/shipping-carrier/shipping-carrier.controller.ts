@@ -13,13 +13,12 @@ import { CreateShippingCarrierDto } from './dto/create-shipping-carrier.dto'
 import { UpdateShippingCarrierDto } from './dto/update-shipping-carrier.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { RolesGuard } from '@/role/roles.guard'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { Roles } from '@/role/roles.decorator'
 import { Role } from '@/role/role.enum'
 
 @ApiTags('shipping-carriers')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(RolesGuard)
 @Roles(Role.Admin)
 @Controller('shipping-carriers')
 export class ShippingCarrierController {

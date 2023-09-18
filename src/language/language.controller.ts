@@ -19,9 +19,9 @@ import { CreateLanguageDto } from '@/language/dto/create-language.dto'
 import { Language } from './entities/language.entity'
 import { UpdateLanguageDto } from '@/language/dto/update-language.dto'
 import { RolesGuard } from '@/role/roles.guard'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { Roles } from '@/role/roles.decorator'
 import { Role } from '@/role/role.enum'
+import { Public } from '@/auth/public.decorator'
 
 @ApiTags('languages')
 @Controller('languages')
@@ -35,12 +35,13 @@ export class LanguageController {
   })
   @ApiBearerAuth()
   @Post()
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.Admin)
   create(@Body() createLanguageDto: CreateLanguageDto): Promise<Language> {
     return this.languageService.create(createLanguageDto)
   }
 
+  @Public()
   @ApiOperation({ summary: 'Retrieve languages' })
   @ApiResponse({
     status: 200,
@@ -67,7 +68,7 @@ export class LanguageController {
   })
   @ApiBearerAuth()
   @Patch(':code')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.Admin)
   async update(
     @Param('code') code: string,
@@ -80,7 +81,7 @@ export class LanguageController {
   @ApiResponse({ status: 200, description: 'The language has been deleted.' })
   @ApiBearerAuth()
   @Delete(':code')
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(Role.Admin)
   remove(@Param('code') code: string): Promise<void> {
     return this.languageService.remove(code)

@@ -20,6 +20,7 @@ import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { UpdateUserDto } from '@/user/dto/update-user.dto'
 import { RegisterUserDto } from '@/user/dto/register-user.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { Public } from '@/auth/public.decorator'
 
 @ApiTags('users')
 @Controller('users')
@@ -30,7 +31,7 @@ export class UserController {
   @ApiBearerAuth()
   @Post()
   @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto)
   }
@@ -39,7 +40,7 @@ export class UserController {
   @ApiBearerAuth()
   @Get()
   @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   async findAll(@Query() paginationQueryDto: PaginationQueryDto) {
     return this.userService.findAll(paginationQueryDto)
   }
@@ -47,7 +48,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get user by id' })
   @Get(':id')
   @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   async findOne(@Param('id') id: number) {
     return this.userService.findOneById(+id)
   }
@@ -55,11 +56,12 @@ export class UserController {
   @ApiOperation({ summary: 'Update user by id' })
   @Patch(':id')
   @Roles(Role.Admin)
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     await this.userService.update(+id, updateUserDto)
   }
 
+  @Public()
   @ApiOperation({ summary: 'Register user' })
   @Post('register')
   async register(@Body() registerUserDto: RegisterUserDto) {
@@ -67,6 +69,9 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Get your profile' })
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @Roles(Role.User, Role.Admin)
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   async getProfile(@Request() req) {
@@ -74,6 +79,9 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Update your profile' })
+  @ApiBearerAuth()
+  @UseGuards(RolesGuard)
+  @Roles(Role.User, Role.Admin)
   @Patch('profile')
   @UseGuards(JwtAuthGuard)
   async updateProfile(

@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common'
 import { PaymentService } from './payment.service'
 import { CreatePaymentDto } from './dto/create-payment.dto'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { Roles } from '@/role/roles.decorator'
 import { Role } from '@/role/role.enum'
 import { RolesGuard } from '@/role/roles.guard'
@@ -18,7 +17,7 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('payments')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(RolesGuard)
 @Roles(Role.Admin)
 @Controller('payments')
 export class PaymentController {

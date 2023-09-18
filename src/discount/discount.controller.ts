@@ -14,14 +14,13 @@ import { CreateDiscountDto } from './dto/create-discount.dto'
 import { UpdateDiscountDto } from './dto/update-discount.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { RolesGuard } from '@/role/roles.guard'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { Roles } from '@/role/roles.decorator'
 import { Role } from '@/role/role.enum'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 
 @ApiTags('discounts')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(RolesGuard)
 @Roles(Role.Admin)
 @Controller('discounts')
 export class DiscountController {

@@ -13,14 +13,13 @@ import { CreateCurrencyDto } from './dto/create-currency.dto'
 import { UpdateCurrencyDto } from './dto/update-currency.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { RolesGuard } from '@/role/roles.guard'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { Roles } from '@/role/roles.decorator'
 import { Role } from '@/role/role.enum'
 import { Currency } from '@/currency/entities/currency.entity'
 
 @ApiTags('currencies')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(RolesGuard)
 @Roles(Role.Admin)
 @Controller('currencies')
 export class CurrencyController {

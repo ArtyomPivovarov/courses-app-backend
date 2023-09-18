@@ -3,12 +3,14 @@ import { LocalAuthGuard } from '@/auth/local-auth.guard'
 import { AuthService } from '@/auth/auth.service'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { SuccessAuthResponse } from '@/auth/auth.types'
+import { Public } from '@/auth/public.decorator'
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @ApiOperation({
     summary: 'Log in',
     requestBody: {

@@ -14,14 +14,13 @@ import { CreateCartDto } from './dto/create-cart.dto'
 import { UpdateCartDto } from './dto/update-cart.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { RolesGuard } from '@/role/roles.guard'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { Role } from '@/role/role.enum'
 import { Roles } from '@/role/roles.decorator'
 
 @ApiTags('carts')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(RolesGuard)
 @Roles(Role.Admin)
 @Controller('carts')
 export class CartController {

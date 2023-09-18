@@ -13,13 +13,12 @@ import { CreatePaymentMethodDto } from './dto/create-payment-method.dto'
 import { UpdatePaymentMethodDto } from './dto/update-payment-method.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { RolesGuard } from '@/role/roles.guard'
-import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { Role } from '@/role/role.enum'
 import { Roles } from '@/role/roles.decorator'
 
 @ApiTags('payment-methods')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard, RolesGuard)
+@UseGuards(RolesGuard)
 @Roles(Role.Admin)
 @Controller('payment-methods')
 export class PaymentMethodController {
