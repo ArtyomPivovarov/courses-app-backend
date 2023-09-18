@@ -12,10 +12,9 @@ import { OrderService } from './order.service'
 import { CreateOrderDto } from '@/order/dto/create-order.dto'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { UpdateOrderDto } from '@/order/dto/update-order.dto'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('orders')
-@ApiBearerAuth()
 @Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}

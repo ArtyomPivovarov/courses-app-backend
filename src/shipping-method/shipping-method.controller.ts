@@ -10,10 +10,9 @@ import {
 import { ShippingMethodService } from './shipping-method.service'
 import { CreateShippingMethodDto } from './dto/create-shipping-method.dto'
 import { UpdateShippingMethodDto } from './dto/update-shipping-method.dto'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('shipping-methods')
-@ApiBearerAuth()
 @Controller('shipping-methods')
 export class ShippingMethodController {
   constructor(private readonly shippingMethodService: ShippingMethodService) {}

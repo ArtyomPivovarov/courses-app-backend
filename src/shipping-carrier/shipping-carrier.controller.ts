@@ -10,10 +10,9 @@ import {
 import { ShippingCarrierService } from './shipping-carrier.service'
 import { CreateShippingCarrierDto } from './dto/create-shipping-carrier.dto'
 import { UpdateShippingCarrierDto } from './dto/update-shipping-carrier.dto'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('shipping-carriers')
-@ApiBearerAuth()
 @Controller('shipping-carriers')
 export class ShippingCarrierController {
   constructor(

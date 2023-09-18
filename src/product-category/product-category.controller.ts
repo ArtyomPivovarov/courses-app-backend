@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common'
 import { ProductCategoryService } from './product-category.service'
 import { CreateProductCategoryDto } from './dto/create-product-category.dto'
 import { UpdateProductCategoryDto } from './dto/update-product-category.dto'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { Public } from '@/auth/public.decorator'
 
 @ApiTags('product-categories')
@@ -15,7 +15,6 @@ export class ProductCategoryController {
   @ApiOperation({
     summary: 'Create product category'
   })
-  @ApiBearerAuth()
   @Post()
   async create(@Body() createProductCategoryDto: CreateProductCategoryDto) {
     return this.productCategoryService.create(createProductCategoryDto)
@@ -24,7 +23,6 @@ export class ProductCategoryController {
   @ApiOperation({
     summary: 'Retrieve all product categories'
   })
-  @ApiBearerAuth()
   @Get()
   async findAll() {
     return this.productCategoryService.findAll()
@@ -42,7 +40,6 @@ export class ProductCategoryController {
   @ApiOperation({
     summary: 'Update product category by ID'
   })
-  @ApiBearerAuth()
   @Patch(':id')
   async update(
     @Param('id') id: number,

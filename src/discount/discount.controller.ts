@@ -11,11 +11,10 @@ import {
 import { DiscountService } from './discount.service'
 import { CreateDiscountDto } from './dto/create-discount.dto'
 import { UpdateDiscountDto } from './dto/update-discount.dto'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 
 @ApiTags('discounts')
-@ApiBearerAuth()
 @Controller('discounts')
 export class DiscountController {
   constructor(private readonly discountService: DiscountService) {}

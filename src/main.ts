@@ -36,6 +36,12 @@ async function bootstrap() {
     .setVersion(version)
     .build()
   const document = SwaggerModule.createDocument(app, config)
+  for (const path in document.paths) {
+    for (const method in document.paths[path]) {
+      const operation = document.paths[path][method]
+      operation.security = operation.security || [{ bearer: [] }]
+    }
+  }
   SwaggerModule.setup('api', app, document)
 
   await app.listen(3000)

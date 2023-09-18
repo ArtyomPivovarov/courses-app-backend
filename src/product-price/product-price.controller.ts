@@ -8,7 +8,7 @@ import {
   Patch,
   Query
 } from '@nestjs/common'
-import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger'
+import { ApiTags, ApiOperation } from '@nestjs/swagger'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { PaginatedResponse } from '@/common/types/pagination.types'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
@@ -18,7 +18,6 @@ import { CreateProductPriceDto } from '@/product-price/dto/create-product-price.
 import { UpdateProductPriceDto } from '@/product-price/dto/update-product-price.dto'
 
 @ApiTags('product-prices')
-@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 @Controller('product-prices')
 export class ProductPriceController {

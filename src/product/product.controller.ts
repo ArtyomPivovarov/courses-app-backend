@@ -11,7 +11,7 @@ import { ProductService } from './product.service'
 import { CreateProductDto } from './dto/create-product.dto'
 import { UpdateProductDto } from './dto/update-product.dto'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { Public } from '@/auth/public.decorator'
 
 @ApiTags('products')
@@ -20,7 +20,6 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @ApiOperation({ summary: 'Create product' })
-  @ApiBearerAuth()
   @Post()
   create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto)
@@ -41,7 +40,6 @@ export class ProductController {
   }
 
   @ApiOperation({ summary: 'Update product by ID' })
-  @ApiBearerAuth()
   @Patch(':id')
   async update(
     @Param('id') id: string,

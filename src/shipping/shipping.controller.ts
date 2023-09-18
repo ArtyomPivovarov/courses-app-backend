@@ -11,11 +11,10 @@ import {
 import { ShippingService } from './shipping.service'
 import { CreateShippingDto } from './dto/create-shipping.dto'
 import { UpdateShippingDto } from './dto/update-shipping.dto'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 
 @ApiTags('shippings')
-@ApiBearerAuth()
 @Controller('shippings')
 export class ShippingController {
   constructor(private readonly shippingService: ShippingService) {}

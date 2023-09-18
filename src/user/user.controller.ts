@@ -19,30 +19,26 @@ import { RolesGuard } from '@/role/roles.guard'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { UpdateUserDto } from '@/user/dto/update-user.dto'
 import { RegisterUserDto } from '@/user/dto/register-user.dto'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { Public } from '@/auth/public.decorator'
 
 @ApiTags('users')
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
   @ApiOperation({ summary: 'Create user' })
-  @ApiBearerAuth()
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto)
   }
 
   @ApiOperation({ summary: 'Get all users' })
-  @ApiBearerAuth()
   @Get()
   async findAll(@Query() paginationQueryDto: PaginationQueryDto) {
     return this.userService.findAll(paginationQueryDto)
   }
 
   @ApiOperation({ summary: 'Get user by id' })
-  @ApiBearerAuth()
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return this.userService.findOneById(+id)
@@ -62,7 +58,6 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Get your profile' })
-  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @Roles(Role.Admin, Role.User)
   @Get('profile')
@@ -72,7 +67,6 @@ export class UserController {
   }
 
   @ApiOperation({ summary: 'Update your profile' })
-  @ApiBearerAuth()
   @UseGuards(RolesGuard)
   @Roles(Role.Admin, Role.User)
   @Patch('profile')

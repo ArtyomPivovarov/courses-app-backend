@@ -8,14 +8,13 @@ import {
   Delete,
   Query
 } from '@nestjs/common'
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { OrderDetailService } from '@/order-detail/order-detail.service'
 import { CreateOrderDetailDto } from '@/order-detail/dto/create-order-detail.dto'
 import { UpdateOrderDetailDto } from '@/order-detail/dto/update-order-detail.dto'
 
 @ApiTags('order-details')
-@ApiBearerAuth()
 @Controller('order-details')
 export class OrderDetailController {
   constructor(private readonly orderDetailService: OrderDetailService) {}
