@@ -5,16 +5,12 @@ import {
   Body,
   Patch,
   Param,
-  Query,
-  UseGuards
+  Query
 } from '@nestjs/common'
 import { ProductService } from './product.service'
 import { CreateProductDto } from './dto/create-product.dto'
 import { UpdateProductDto } from './dto/update-product.dto'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
-import { Role } from '@/role/role.enum'
-import { Roles } from '@/role/roles.decorator'
-import { RolesGuard } from '@/role/roles.guard'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { Public } from '@/auth/public.decorator'
 
@@ -26,8 +22,6 @@ export class ProductController {
   @ApiOperation({ summary: 'Create product' })
   @ApiBearerAuth()
   @Post()
-  @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
   create(@Body() createProductDto: CreateProductDto) {
     return this.productService.create(createProductDto)
   }
@@ -49,7 +43,6 @@ export class ProductController {
   @ApiOperation({ summary: 'Update product by ID' })
   @ApiBearerAuth()
   @Patch(':id')
-  @Roles(Role.Admin)
   async update(
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto

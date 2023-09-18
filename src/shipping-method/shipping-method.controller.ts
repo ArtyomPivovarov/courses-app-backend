@@ -5,21 +5,15 @@ import {
   Get,
   Param,
   Patch,
-  Post,
-  UseGuards
+  Post
 } from '@nestjs/common'
 import { ShippingMethodService } from './shipping-method.service'
 import { CreateShippingMethodDto } from './dto/create-shipping-method.dto'
 import { UpdateShippingMethodDto } from './dto/update-shipping-method.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { Roles } from '@/role/roles.decorator'
-import { Role } from '@/role/role.enum'
-import { RolesGuard } from '@/role/roles.guard'
 
 @ApiTags('shipping-methods')
 @ApiBearerAuth()
-@UseGuards(RolesGuard)
-@Roles(Role.Admin)
 @Controller('shipping-methods')
 export class ShippingMethodController {
   constructor(private readonly shippingMethodService: ShippingMethodService) {}

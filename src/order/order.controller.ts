@@ -6,22 +6,16 @@ import {
   Param,
   Patch,
   Post,
-  Query,
-  UseGuards
+  Query
 } from '@nestjs/common'
 import { OrderService } from './order.service'
 import { CreateOrderDto } from '@/order/dto/create-order.dto'
-import { Roles } from '@/role/roles.decorator'
-import { Role } from '@/role/role.enum'
-import { RolesGuard } from '@/role/roles.guard'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { UpdateOrderDto } from '@/order/dto/update-order.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('orders')
 @ApiBearerAuth()
-@Roles(Role.Admin)
-@UseGuards(RolesGuard)
 @Controller('orders')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {}

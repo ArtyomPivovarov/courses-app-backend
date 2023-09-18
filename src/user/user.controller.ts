@@ -30,8 +30,6 @@ export class UserController {
   @ApiOperation({ summary: 'Create user' })
   @ApiBearerAuth()
   @Post()
-  @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
   async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto)
   }
@@ -39,24 +37,19 @@ export class UserController {
   @ApiOperation({ summary: 'Get all users' })
   @ApiBearerAuth()
   @Get()
-  @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
   async findAll(@Query() paginationQueryDto: PaginationQueryDto) {
     return this.userService.findAll(paginationQueryDto)
   }
 
   @ApiOperation({ summary: 'Get user by id' })
+  @ApiBearerAuth()
   @Get(':id')
-  @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
   async findOne(@Param('id') id: number) {
     return this.userService.findOneById(+id)
   }
 
   @ApiOperation({ summary: 'Update user by id' })
   @Patch(':id')
-  @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
   async update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
     await this.userService.update(+id, updateUserDto)
   }
@@ -71,7 +64,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get your profile' })
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
-  @Roles(Role.User, Role.Admin)
+  @Roles(Role.Admin, Role.User)
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   async getProfile(@Request() req) {
@@ -81,7 +74,7 @@ export class UserController {
   @ApiOperation({ summary: 'Update your profile' })
   @ApiBearerAuth()
   @UseGuards(RolesGuard)
-  @Roles(Role.User, Role.Admin)
+  @Roles(Role.Admin, Role.User)
   @Patch('profile')
   @UseGuards(JwtAuthGuard)
   async updateProfile(

@@ -23,6 +23,7 @@ import { ShippingMethodModule } from './shipping-method/shipping-method.module'
 import { DiscountModule } from './discount/discount.module'
 import { JwtAuthGuard } from '@/auth/jwt-auth.guard'
 import { APP_GUARD } from '@nestjs/core'
+import { RolesGuard } from '@/role/roles.guard'
 
 @Module({
   imports: [
@@ -69,7 +70,12 @@ import { APP_GUARD } from '@nestjs/core'
       provide: APP_GUARD,
       useExisting: JwtAuthGuard
     },
-    JwtAuthGuard
+    JwtAuthGuard,
+    {
+      provide: APP_GUARD,
+      useExisting: RolesGuard
+    },
+    RolesGuard
   ]
 })
 export class AppModule {}

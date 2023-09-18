@@ -5,7 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  UseGuards,
   Patch
 } from '@nestjs/common'
 import {
@@ -18,9 +17,6 @@ import { LanguageService } from './language.service'
 import { CreateLanguageDto } from '@/language/dto/create-language.dto'
 import { Language } from './entities/language.entity'
 import { UpdateLanguageDto } from '@/language/dto/update-language.dto'
-import { RolesGuard } from '@/role/roles.guard'
-import { Roles } from '@/role/roles.decorator'
-import { Role } from '@/role/role.enum'
 import { Public } from '@/auth/public.decorator'
 
 @ApiTags('languages')
@@ -35,8 +31,6 @@ export class LanguageController {
   })
   @ApiBearerAuth()
   @Post()
-  @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
   create(@Body() createLanguageDto: CreateLanguageDto): Promise<Language> {
     return this.languageService.create(createLanguageDto)
   }
@@ -68,8 +62,6 @@ export class LanguageController {
   })
   @ApiBearerAuth()
   @Patch(':code')
-  @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
   async update(
     @Param('code') code: string,
     @Body() updateLanguageDto: UpdateLanguageDto
@@ -81,8 +73,6 @@ export class LanguageController {
   @ApiResponse({ status: 200, description: 'The language has been deleted.' })
   @ApiBearerAuth()
   @Delete(':code')
-  @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
   remove(@Param('code') code: string): Promise<void> {
     return this.languageService.remove(code)
   }

@@ -1,24 +1,11 @@
-import {
-  Controller,
-  Post,
-  Body,
-  UseGuards,
-  Get,
-  Param,
-  Query
-} from '@nestjs/common'
+import { Controller, Post, Body, Get, Param, Query } from '@nestjs/common'
 import { PaymentService } from './payment.service'
 import { CreatePaymentDto } from './dto/create-payment.dto'
-import { Roles } from '@/role/roles.decorator'
-import { Role } from '@/role/role.enum'
-import { RolesGuard } from '@/role/roles.guard'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('payments')
 @ApiBearerAuth()
-@UseGuards(RolesGuard)
-@Roles(Role.Admin)
 @Controller('payments')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}

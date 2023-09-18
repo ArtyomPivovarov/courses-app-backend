@@ -5,21 +5,15 @@ import {
   Body,
   Patch,
   Param,
-  Delete,
-  UseGuards
+  Delete
 } from '@nestjs/common'
 import { PaymentMethodService } from './payment-method.service'
 import { CreatePaymentMethodDto } from './dto/create-payment-method.dto'
 import { UpdatePaymentMethodDto } from './dto/update-payment-method.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { RolesGuard } from '@/role/roles.guard'
-import { Role } from '@/role/role.enum'
-import { Roles } from '@/role/roles.decorator'
 
 @ApiTags('payment-methods')
 @ApiBearerAuth()
-@UseGuards(RolesGuard)
-@Roles(Role.Admin)
 @Controller('payment-methods')
 export class PaymentMethodController {
   constructor(private readonly paymentMethodService: PaymentMethodService) {}

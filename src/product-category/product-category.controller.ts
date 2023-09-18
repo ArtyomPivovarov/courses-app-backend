@@ -1,18 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  UseGuards
-} from '@nestjs/common'
+import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common'
 import { ProductCategoryService } from './product-category.service'
 import { CreateProductCategoryDto } from './dto/create-product-category.dto'
 import { UpdateProductCategoryDto } from './dto/update-product-category.dto'
-import { Roles } from '@/role/roles.decorator'
-import { Role } from '@/role/role.enum'
-import { RolesGuard } from '@/role/roles.guard'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
 import { Public } from '@/auth/public.decorator'
 
@@ -28,8 +17,6 @@ export class ProductCategoryController {
   })
   @ApiBearerAuth()
   @Post()
-  @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
   async create(@Body() createProductCategoryDto: CreateProductCategoryDto) {
     return this.productCategoryService.create(createProductCategoryDto)
   }
@@ -39,8 +26,6 @@ export class ProductCategoryController {
   })
   @ApiBearerAuth()
   @Get()
-  @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
   async findAll() {
     return this.productCategoryService.findAll()
   }
@@ -59,8 +44,6 @@ export class ProductCategoryController {
   })
   @ApiBearerAuth()
   @Patch(':id')
-  @Roles(Role.Admin)
-  @UseGuards(RolesGuard)
   async update(
     @Param('id') id: number,
     @Body()

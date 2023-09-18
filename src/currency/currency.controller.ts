@@ -5,22 +5,16 @@ import {
   Get,
   Param,
   Patch,
-  Post,
-  UseGuards
+  Post
 } from '@nestjs/common'
 import { CurrencyService } from './currency.service'
 import { CreateCurrencyDto } from './dto/create-currency.dto'
 import { UpdateCurrencyDto } from './dto/update-currency.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { RolesGuard } from '@/role/roles.guard'
-import { Roles } from '@/role/roles.decorator'
-import { Role } from '@/role/role.enum'
 import { Currency } from '@/currency/entities/currency.entity'
 
 @ApiTags('currencies')
 @ApiBearerAuth()
-@UseGuards(RolesGuard)
-@Roles(Role.Admin)
 @Controller('currencies')
 export class CurrencyController {
   constructor(private readonly currencyService: CurrencyService) {}

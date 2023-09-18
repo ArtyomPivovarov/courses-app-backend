@@ -6,13 +6,9 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   Query
 } from '@nestjs/common'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { RolesGuard } from '@/role/roles.guard'
-import { Role } from '@/role/role.enum'
-import { Roles } from '@/role/roles.decorator'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { OrderDetailService } from '@/order-detail/order-detail.service'
 import { CreateOrderDetailDto } from '@/order-detail/dto/create-order-detail.dto'
@@ -20,8 +16,6 @@ import { UpdateOrderDetailDto } from '@/order-detail/dto/update-order-detail.dto
 
 @ApiTags('order-details')
 @ApiBearerAuth()
-@UseGuards(RolesGuard)
-@Roles(Role.Admin)
 @Controller('order-details')
 export class OrderDetailController {
   constructor(private readonly orderDetailService: OrderDetailService) {}

@@ -6,22 +6,16 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   Query
 } from '@nestjs/common'
 import { CartItemService } from './cart-item.service'
 import { CreateCartItemDto } from './dto/create-cart-item.dto'
 import { UpdateCartItemDto } from './dto/update-cart-item.dto'
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { RolesGuard } from '@/role/roles.guard'
-import { Role } from '@/role/role.enum'
-import { Roles } from '@/role/roles.decorator'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 
 @ApiTags('cart-items')
 @ApiBearerAuth()
-@UseGuards(RolesGuard)
-@Roles(Role.Admin)
 @Controller('cart-items')
 export class CartItemController {
   constructor(private readonly cartItemService: CartItemService) {}
