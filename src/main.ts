@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import 'module-alias/register'
-import { NestFactory } from '@nestjs/core'
+import { NestFactory, Reflector } from '@nestjs/core'
 import { AppModule } from './app.module'
 import { ValidationPipe } from '@nestjs/common'
 import {
@@ -9,6 +9,7 @@ import {
 } from '@nestjs/platform-fastify'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { version } from 'package.json'
+import { IS_PUBLIC_KEY } from '@/auth/public.decorator'
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -30,18 +31,52 @@ async function bootstrap() {
     })
   )
 
+  const routes = new Map()
+  app
+    .getHttpAdapter()
+    .getInstance()
+    .addHook('onRoute', routeOptions => {
+      const { url } = routeOptions
+
+      let routeListForUrl = routes.get(url)
+      if (!routeListForUrl) {
+        routeListForUrl = []
+        routes.set(url, routeListForUrl)
+      }
+
+      routeListForUrl.push(routeOptions)
+    })
+
   const config = new DocumentBuilder()
     .addBearerAuth()
     .setTitle('Courses app')
     .setVersion(version)
     .build()
   const document = SwaggerModule.createDocument(app, config)
-  for (const path in document.paths) {
-    for (const method in document.paths[path]) {
-      const operation = document.paths[path][method]
+
+  await app.init()
+
+  const reflector = app.get(Reflector)
+  for (const pathRoutes of routes.values()) {
+    for (const route of pathRoutes) {
+      const { method, path, handler } = route
+      const swaggerPath = path.replace(/:(\w+)/g, '{$1}')
+      const operation =
+        document.paths[swaggerPath] &&
+        document.paths[swaggerPath][method.toLowerCase()]
+
+      if (!operation) {
+        continue
+      }
+
       operation.security = operation.security || [{ bearer: [] }]
+
+      if (operation && reflector.get(IS_PUBLIC_KEY, handler)) {
+        delete operation.security
+      }
     }
   }
+
   SwaggerModule.setup('api', app, document)
 
   await app.listen(3000)
