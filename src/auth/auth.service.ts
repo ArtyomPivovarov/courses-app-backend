@@ -3,19 +3,32 @@ import { UserService } from '@/user/user.service'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
 import { User } from '@/user/entities/user.entity'
-import { createAccessToken } from '@/auth/auth.utils'
 import { buildUserProfile } from '@/user/user.utils'
-import { SuccessAuthResponse } from '@/auth/auth.types'
+import { SuccessAuthResponse, UserTokenPayload } from '@/auth/auth.types'
+import { ModuleRef } from '@nestjs/core'
 
 @Injectable()
 export class AuthService {
+  private userService: UserService
   constructor(
-    private usersService: UserService,
-    private jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly userModuleRef: ModuleRef
   ) {}
 
+  onModuleInit() {
+    this.userService = this.userModuleRef.get(UserService, { strict: false })
+  }
+
+  async login(user: User): Promise<SuccessAuthResponse> {
+    return {
+      user: buildUserProfile(user),
+      accessToken: this.generateAccessToken(user),
+      refreshToken: await this.generateRefreshToken(user)
+    }
+  }
+
   async validateUser(email: string, password: string) {
-    const user = await this.usersService.findOneByEmail(email)
+    const user = await this.userService.findOneByEmail(email)
     if (!user) {
       throw new UnauthorizedException('Invalid email or password')
     }
@@ -28,17 +41,31 @@ export class AuthService {
     return user
   }
 
-  async login(user: User): Promise<SuccessAuthResponse> {
-    return {
-      user: buildUserProfile(user),
-      accessToken: createAccessToken(
-        {
-          id: user.id,
-          email: user.email,
-          role: user.role
-        },
-        this.jwtService
-      )
+  async validateRefreshToken(token: string): Promise<User> {
+    const payload = this.jwtService.verify(token)
+    const user = await this.userService.findOneById(payload.id)
+    if (!user || user.refreshToken !== token) {
+      throw new UnauthorizedException('Invalid refresh token')
     }
+
+    return user
+  }
+
+  generateAccessToken({ id, email, role }: UserTokenPayload) {
+    return this.jwtService.sign({
+      id,
+      email,
+      role
+    })
+  }
+
+  async generateRefreshToken({
+    id,
+    email,
+    role
+  }: UserTokenPayload): Promise<string> {
+    const refreshToken = this.jwtService.sign({ id, email, role })
+    await this.userService.update(id, { refreshToken })
+    return refreshToken
   }
 }

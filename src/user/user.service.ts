@@ -9,23 +9,30 @@ import { Repository } from 'typeorm'
 import { User } from './entities/user.entity'
 import * as bcrypt from 'bcrypt'
 import { JwtService } from '@nestjs/jwt'
-import { UserAdminProfile } from '@/user/user.types'
-import { createAccessToken } from '@/auth/auth.utils'
-import { buildUserAdminProfile, buildUserProfile } from '@/user/user.utils'
+import { FullUserProfile } from '@/user/user.types'
+import { buildFullUserProfile, buildUserProfile } from '@/user/user.utils'
 import { UpdateUserProfileDto } from '@/user/dto/update-user-profile.dto'
 import { PaginationQueryDto } from '@/common/dto/pagination-query.dto'
 import { PaginatedResponse } from '@/common/types/pagination.types'
 import { RegisterUserDto } from '@/user/dto/register-user.dto'
 import { CreateUserDto } from '@/user/dto/create-user.dto'
 import { SuccessAuthResponse } from '@/auth/auth.types'
+import { AuthService } from '@/auth/auth.service'
+import { ModuleRef } from '@nestjs/core'
 
 @Injectable()
 export class UserService {
+  private authService: AuthService
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private readonly authModuleRef: ModuleRef
   ) {}
+
+  onModuleInit() {
+    this.authService = this.authModuleRef.get(AuthService, { strict: false })
+  }
 
   async create(createUserDto: CreateUserDto) {
     const existUser = await this.userRepository.findOne({
@@ -45,7 +52,7 @@ export class UserService {
       role: createUserDto.role
     })
 
-    return buildUserAdminProfile(user)
+    return buildFullUserProfile(user)
   }
 
   async register(
@@ -69,20 +76,14 @@ export class UserService {
 
     return {
       user: buildUserProfile(user),
-      accessToken: createAccessToken(
-        {
-          id: user.id,
-          email: user.email,
-          role: user.role
-        },
-        this.jwtService
-      )
+      accessToken: this.authService.generateAccessToken(user),
+      refreshToken: await this.authService.generateRefreshToken(user)
     }
   }
 
   async findAll(
     paginationQuery: PaginationQueryDto
-  ): Promise<PaginatedResponse<UserAdminProfile>> {
+  ): Promise<PaginatedResponse<FullUserProfile>> {
     const { page, limit } = paginationQuery
 
     const [items, totalItems] = await this.userRepository.findAndCount({
@@ -111,21 +112,34 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { id }
     })
-
-    return buildUserAdminProfile(user)
-  }
-
-  async findOneByEmail(email: string) {
-    return this.userRepository.findOne({
-      where: { email }
-    })
-  }
-
-  async update(id: number, updateUserDto: UpdateUserDto) {
-    const user = await this.userRepository.findOne({ where: { id } })
     if (!user) {
       throw new NotFoundException('User not found')
     }
+
+    return user
+  }
+
+  async findOneByEmail(email: string) {
+    const user = this.userRepository.findOne({
+      where: { email }
+    })
+    if (!user) {
+      throw new NotFoundException('User not found')
+    }
+
+    return user
+  }
+
+  async getFullUserProfileById(id: number) {
+    const user = await this.userRepository.findOne({
+      where: { id }
+    })
+
+    return buildFullUserProfile(user)
+  }
+
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const user = await this.findOneById(id)
 
     const { password, ...rest } = updateUserDto
     const updateUserPayload = { ...rest }
@@ -136,7 +150,7 @@ export class UserService {
       )
     }
 
-    return await this.userRepository.update(id, updateUserPayload)
+    return await this.userRepository.update(user.id, updateUserPayload)
   }
 
   async getProfile(id: number) {

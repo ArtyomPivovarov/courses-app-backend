@@ -10,4 +10,5 @@ export type UserTokenPayload = {
 export type SuccessAuthResponse = {
   user: UserProfile
   accessToken: string
+  refreshToken: string
 }

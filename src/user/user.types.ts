@@ -6,9 +6,10 @@ export type UserProfile = {
   name: User['name']
 }
 
-export type UserAdminProfile = {
+export type FullUserProfile = {
   id: User['id']
   email: User['email']
   name: User['name']
   role: User['role']
+  refreshToken: User['refreshToken']
 }

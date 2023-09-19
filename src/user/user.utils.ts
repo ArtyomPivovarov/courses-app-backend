@@ -1,4 +1,4 @@
-import { UserAdminProfile, UserProfile } from '@/user/user.types'
+import { FullUserProfile, UserProfile } from '@/user/user.types'
 import { User } from '@/user/entities/user.entity'
 
 export function buildUserProfile(user: User): UserProfile {
@@ -9,11 +9,12 @@ export function buildUserProfile(user: User): UserProfile {
   }
 }
 
-export function buildUserAdminProfile(user: User): UserAdminProfile {
+export function buildFullUserProfile(user: User): FullUserProfile {
   return {
     id: user.id,
     email: user.email,
     name: user.name,
-    role: user.role
+    role: user.role,
+    refreshToken: user.refreshToken
   }
 }

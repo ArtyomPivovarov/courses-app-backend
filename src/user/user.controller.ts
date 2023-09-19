@@ -41,7 +41,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get user by id' })
   @Get(':id')
   async findOne(@Param('id') id: number) {
-    return this.userService.findOneById(+id)
+    return this.userService.getFullUserProfileById(+id)
   }
 
   @ApiOperation({ summary: 'Update user by id' })

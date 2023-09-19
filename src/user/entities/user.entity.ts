@@ -6,7 +6,6 @@ import {
   UpdateDateColumn,
   OneToMany
 } from 'typeorm'
-import { Payment } from '@/payment/entities/payment.entity'
 import { Order } from '@/order/entities/order.entity'
 import { Role } from '@/role/role.enum'
 import { Cart } from '@/cart/entities/cart.entity'
@@ -15,6 +14,9 @@ import { Cart } from '@/cart/entities/cart.entity'
 export class User {
   @PrimaryGeneratedColumn({ name: 'user_id' })
   id: number
+
+  @Column({ name: 'refresh_token', nullable: true })
+  refreshToken: string
 
   @Column()
   name: string
